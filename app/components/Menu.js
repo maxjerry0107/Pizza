@@ -123,8 +123,11 @@ export default class Menu extends Component {
               <FlatList style={{marginBottom:0,}}
                 data={this.state.serviceItems}
                 renderItem={({ item }) => (
-                  <Button transparent onPress={()=>NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})} style={{height:width/3, width:'100%'}}>
-                      <Image style={{width:'100%', height:'110%'}} source={ {uri:item.featured_img}}>
+                  <Button transparent onPress={()=>NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})} style={{height:width/3, width:'100%', padding:0,marginVertical:-2}}>
+                      <Image style={{width:'100%', height:'110%'}} 
+                      source={ {uri:item.featured_img}}
+                  //    source={require('../assets/images/cate1.jpg')}
+                      >
                       {/* <View style={{backgroundColor:'rgba(255,255,255,0.6)', width:'60%', height:40, justifyContent: 'center',alignItems: 'center',alignSelf:'center', borderBottomLeftRadius:10, borderBottomRightRadius:10, borderRadius:10,}}>
                         <Text style={{color:'rgba(0,0,0,0.6)',fontFamily:'Gotham-Medium',fontSize:22,textAlign:'center'}}>{item.name}</Text>
                       </View> */}
