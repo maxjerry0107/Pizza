@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import {View,  ImageBackground,StatusBar,Image,TextInput,Text,TouchableOpacity,SafeAreaView, BackHandler} from 'react-native';
 import {StyleSheet, Linking} from 'react-native'
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
     width:'70%', height:60, backgroundColor:'#f11', borderWidth:5, borderColor:'white', alignItems:'center', justifyContent:'center',
   },
   btnTextStyle:{
-    fontFamily:'Raleway-Bold', fontSize:25, color:'white'
+     fontSize:25, color:'white'
   },
   inputBoxView:{
     flex:1, flexDirection:'column', alignItems:'center', alignContent:'center', justifyContent:'center', paddingHorizontal:10
@@ -101,7 +102,7 @@ componentDidMount = ()=>{
                   <Image source={require('../assets/images/sign/marker.png')} style={{height:'70%',}} resizeMode={'contain'}></Image>
                 </View>
                 <View style={{flex:5, borderLeftColor:'#808285', borderLeftWidth:1 , paddingHorizontal:20,}}>
-                <Text style={{color:'#000', fontSize:15, fontFamily:'Gotham-Medium', alignSelf:'center', }}>
+                <Text style={{color:'#000', fontSize:15,  alignSelf:'center', }}>
                   WE NEED A LITTLE MORE INFO BEFORE WE START
                 </Text>
                 </View>
@@ -119,12 +120,12 @@ componentDidMount = ()=>{
                 elevation: 6}}>
                   <View style={{flex:1, flexDirection:'row', alignItems:'center', alignContent:'center', justifyContent:'center'}}>
                     <Image source={require('../assets/images/sign/car.png')} style={{height:'70%',}} resizeMode={'contain'}></Image>
-                    <Text style={{color:'#f00', fontSize:20, fontFamily:'Gotham-Medium'}}>DELIVERY</Text>
+                    <Text style={{color:'#f00', fontSize:20,}}>DELIVERY</Text>
                   </View>
                   <View style={styles.inputBoxView}>
                     <View style={styles.inputBoxView1}>
                       <View style={{flex:3,flexDirection:'column'}}>
-                        <Text style={{ fontSize:12, fontFamily:'Gotham-Medium', color:'#000'}}>Street addess</Text>
+                        <Text style={{ fontSize:12,  color:'#000'}}>Street addess</Text>
                       </View>
                       <View style={{flex:2,flexDirection:'column'}}>
                       </View>
@@ -132,13 +133,13 @@ componentDidMount = ()=>{
                     <View style={[styles.inputBoxView1, {flex:1}]}>
                       <View style={{flex:3,flexDirection:'column', alignItems:'flex-start', alignContent:'center', justifyContent:'center'}}>
                         <TextInput ref={(c)=>this._street=c}
-                           style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'100%', height:'100%', paddingVertical:5, paddingLeft:10, fontFamily:'Gotham-Book'}}
+                           style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'100%', height:'100%', paddingVertical:5, paddingLeft:10, }}
                           placeholder="Street addess" placeholderTextColor={'#a7a9ac'}
                         ></TextInput>
                       </View>
                       {/* <View style={{flex:2,flexDirection:'column',alignItems:'center', alignContent:'center', justifyContent:'center'}}>
                         <TextInput  ref={(c)=>this._address=c}
-                          style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'95%', height:'100%', paddingVertical:5, paddingLeft:10, fontFamily:'Gotham-Book'}}
+                          style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'95%', height:'100%', paddingVertical:5, paddingLeft:10, }}
                           placeholder="Apt/Ste/Rm" placeholderTextColor={'#a7a9ac'}></TextInput>
                       </View> */}
                     </View>
@@ -146,50 +147,61 @@ componentDidMount = ()=>{
                   <View style={styles.inputBoxView}>
                     <View style={styles.inputBoxView1}>
                       <View style={{flex:3,flexDirection:'column'}}>
-                        <Text style={{ fontSize:12, fontFamily:'Gotham-Medium', color:'#000'}}>City</Text>
+                        <Text style={{ fontSize:12,  color:'#000'}}>City</Text>
                       </View>
                       <View style={{flex:2,flexDirection:'column'}}>
-                        <Text style={{ fontSize:12, fontFamily:'Gotham-Medium', color:'#000'}}>State</Text>
+                        <Text style={{ fontSize:12,  color:'#000'}}>State</Text>
                       </View>
                     </View>
                     <View style={[styles.inputBoxView1, {flex:1}]}>
                       <View style={{flex:3,flexDirection:'column', alignItems:'flex-start', alignContent:'center', justifyContent:'center'}}>
                         <TextInput ref={(c)=>this._city=c} 
-                           style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'95%', height:'100%', paddingVertical:5, paddingLeft:10, fontFamily:'Gotham-Book'}}
+                           style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'95%', height:'100%', paddingVertical:5, paddingLeft:10, }}
                           placeholder="City" placeholderTextColor={'#a7a9ac'}
                         ></TextInput>
                       </View>
                       <View style={{flex:2,flexDirection:'column',alignItems:'center', alignContent:'center', justifyContent:'center'}}>
                         <TextInput  ref={(c)=>this._state=c}
-                          style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'95%', height:'100%', paddingVertical:5, paddingLeft:10, fontFamily:'Gotham-Book'}}
+                          style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'95%', height:'100%', paddingVertical:5, paddingLeft:10, }}
                           placeholder="XX" placeholderTextColor={'#a7a9ac'}></TextInput>
                       </View>
                     </View>
                   </View>
                   <View style={styles.inputBoxView}>
                     <View style={[styles.inputBoxView1]}>                      
-                      <Text style={{ fontSize:12, fontFamily:'Gotham-Medium', color:'#000',textAlign:'left', width:'100%'}}>Zip code</Text>
+                      <Text style={{ fontSize:12,  color:'#000',textAlign:'left', width:'100%'}}>Zip code</Text>
                     </View>
                     <View style={[styles.inputBoxView1, {flex:1}]}>
                       <TextInput ref={(c)=>this._zipcode=c} 
-                          style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'100%', height:'100%', paddingVertical:5, paddingLeft:10, fontFamily:'Gotham-Book'}}
+                          style={{borderWidth:1, borderColor:'#000', borderRadius:7, width:'100%', height:'100%', paddingVertical:5, paddingLeft:10, }}
                         placeholder="xxxxx" placeholderTextColor={'#a7a9ac'}
                       ></TextInput>
                     </View>
                   </View>
-                  <View style={[styles.inputBoxView, {alignItems:'flex-end', paddingRight:'10%'}]}>
-                      <TouchableOpacity onPress={()=>this.deliverysignup()}>
-                        <View style={{flexDirection:'row'}}>
-                          <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>NEXT</Text>
-                          <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginLeft:3}}>></Text>
-                        </View>
-                      </TouchableOpacity>
-                  </View>
+                  <View style={[styles.inputBoxView, { paddingRight: '10%',paddingLeft: '10%', flexDirection:'row' }]}>
+                  <TouchableOpacity onPress={() => {
+                      NavigationService.navigate("Intro")
+                    }} activeOpacity={0.7}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{  color: '#939598', marginRight: 3 }}>{"<"}</Text>
+                      <Text style={{  color: '#f00' }}>BACK</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{flex:1}}></View>
+                  <TouchableOpacity onPress={() => {
+                      this.deliverysignup();
+                    }} activeOpacity={0.7}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{  color: '#f00' }}>NEXT</Text>
+                      <Text style={{  color: '#939598', marginLeft: 3 }}>></Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
                 </View>
               </View>
               <View style={{flex:4, alignItems:'center', paddingTop:20}}>
                 <TouchableOpacity onPress={()=>this.dialCall()}>
-                <Image source={require('../assets/images/sign/delivery_phonenum.png')} style={{height:'80%'}} resizeMode={'contain'}></Image>
+                <Image source={require('../assets/images/sign/delivery_phonenum.png')} style={{height:'75%'}} resizeMode={'contain'}></Image>
                 </TouchableOpacity>
               </View>
             </View>

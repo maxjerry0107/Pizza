@@ -89,14 +89,15 @@ export default class OrderTracking extends Component {
           <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', resizeMode:'repeat'}}>
             {!this.state.loading&&
             <View style={{flex:1}}>
-              <SafeAreaView style={{width:'100%', height:100, alignItems:'center', paddingTop:0, borderBottomWidth:1, borderColor:'#888'}}>
-                <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
-                <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:5, fontWeight:'bold'}}>ORDER TRACKING</Text>
-              </SafeAreaView>
-              <Text style={{width:'100%',paddingVertical:10, textAlign:'center', backgroundColor:'#fff', fontSize:18, borderBottomWidth:1, borderColor:'#888'}}>
-                ORDER ID - {this.state.orderid} 
-              </Text>
-            <ScrollView style={{flex:1, flexDirection:'column'}}>
+              <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
+              <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("MyOrders")}>
+                    <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
+                    <Text style={{color:'#000',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>Order Tracking</Text>
+                </TouchableOpacity>
+                <Text style={{width:'100%',paddingVertical:10, textAlign:'center', backgroundColor:'#fff', fontSize:18, borderBottomWidth:1, borderColor:'#888'}}>
+                  ORDER ID - {this.state.orderid} 
+                </Text>
+                <ScrollView style={{flex:1, flexDirection:'column'}}>
               <ImageBackground source={require('../assets/images/orderpic.png')}  style={{ height:400,width:'100%',alignItems:'center', justifyContent:'center', resizeMode:'contain'}} >
                 <Text style={{fontSize:18,}}>ORDER RECEIVED</Text>
               </ImageBackground>
@@ -174,6 +175,8 @@ export default class OrderTracking extends Component {
               </View>
               
             </ScrollView>
+            </SafeAreaView>
+              
             <View style={{ flexDirection:'row',  paddingVertical:5,marginHorizontal:10, marginBottom:15,borderTopWidth:1}}>
               <Text style={{flex:2 , textAlign:'left', paddingLeft:20, fontSize:22,textAlignVertical:'center'}}>
                 Total

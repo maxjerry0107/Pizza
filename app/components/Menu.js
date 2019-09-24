@@ -4,7 +4,8 @@ import {StyleSheet} from 'react-native'
 import NavigationService from '../../NavigationService'
 import {Item, Icon, Input, Button} from 'native-base'
 import Carousel,{Pagination} from 'react-native-snap-carousel';
-import { TouchableHighlight } from 'react-native';
+import { NativeModules } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 import { SafeAreaView } from 'react-navigation';
 import Toast from 'react-native-root-toast'
 import axios from './Axios'
@@ -25,6 +26,18 @@ export default class Menu extends Component {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
+  
+  gotoLocation = () =>{
+    Geolocation.getCurrentPosition(info => {      
+      NativeModules.MapboxNavigation.navigate(
+        info.coords.latitude,
+        info.coords.longitude,
+        26.4910765,
+        -81.9426475
+      );
+    });    
+  }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
@@ -36,7 +49,6 @@ export default class Menu extends Component {
 
   componentDidMount = ()=>{
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    this.focusListener = this.props.navigation.addListener('didFocus', () => this._keyword.setNativeProps({'text':''}));
     axios.get('?req=category-list')
     .then(response => {
     let res=response.data;
@@ -122,9 +134,12 @@ export default class Menu extends Component {
               <View style={{flex:1,width:'100%',justifyContent: 'center', alignItems:'center'}}>
               <FlatList style={{marginBottom:0,}}
                 data={this.state.serviceItems}
-                renderItem={({ item }) => (
-                  <Button transparent onPress={()=>NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})} style={{height:width/3, width:'100%'}}>
-                      <Image style={{width:'100%', height:'110%'}} source={ {uri:item.featured_img}}>
+                renderItem={({ item, key}) => (
+                  <Button transparent onPress={()=>NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})} style={{height:width/3, width:'100%', padding:0,marginVertical:-2}} key={key}>
+                      <Image style={{width:'100%', height:'110%'}} 
+                      source={ {uri:item.featured_img}}
+                  //    source={require('../assets/images/cate1.jpg')}
+                      >
                       {/* <View style={{backgroundColor:'rgba(255,255,255,0.6)', width:'60%', height:40, justifyContent: 'center',alignItems: 'center',alignSelf:'center', borderBottomLeftRadius:10, borderBottomRightRadius:10, borderRadius:10,}}>
                         <Text style={{color:'rgba(0,0,0,0.6)',fontFamily:'Gotham-Medium',fontSize:22,textAlign:'center'}}>{item.name}</Text>
                       </View> */}
@@ -133,7 +148,6 @@ export default class Menu extends Component {
                 )}
                 //Setting the number of column
                 numColumns={1}
-                keyExtractor={(item, index) => index}
               />
             </View>
           
@@ -156,7 +170,7 @@ export default class Menu extends Component {
                       <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>NavigationService.navigate("MyFavourites")}>
                         <Image source={require('../assets/images/fav.png')} style={{height:40,}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
-                      <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>NavigationService.navigate("Location")}>
+                      <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>this.gotoLocation()}>
                         <Image source={require('../assets/images/direc.png')} style={{height:40,}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
                     </View>

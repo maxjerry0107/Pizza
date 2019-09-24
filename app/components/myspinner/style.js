@@ -25,13 +25,11 @@ export const Style = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontFamily:'Gotham-Bold',
         textAlign: 'center',
     },
     numberText: {
         flex: 1,
         textAlign: 'center',
-        fontFamily:'Gotham-Bold',
         justifyContent: 'center'
     }
 });

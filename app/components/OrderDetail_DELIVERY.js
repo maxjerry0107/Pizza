@@ -102,7 +102,9 @@ export default class OrderDetail_DELIVERY extends Component {
             orderinfo: JSON.stringify(global.signup),
             orderdata: JSON.stringify(global.mycart),
           })
-            .then(response => {
+            .then(response => {              
+            let res=response.data;
+            console.log(res);
               this.setState({loading:false,});
               var n = res.message.search(":");
               var orderid=parseInt(res.message.slice(n+1));
@@ -145,15 +147,14 @@ export default class OrderDetail_DELIVERY extends Component {
             textContent={'Loading...'}
             textStyle={{color:'#000'}}
           />
-            <View style={{width:'100%', height:100,borderBottomWidth:1, }}>            
-                <SafeAreaView style={{width:'100%', alignItems:'center', paddingTop:0,}}>
-                  <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
-                  <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:5, fontWeight:'bold'}}>Product</Text>
-                </SafeAreaView>
-            </View>
-              <View style={{flex:1, flexDirection:'column', backgroundColor:'#eeffff'}}>
-                <ScrollView style={{flex:1, width:'100%', flexDirection:'column', }}>
-                  <View style={{flexDirection:'row',paddingHorizontal:10,}}>
+          <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
+          <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Cart")}>
+                <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
+                <Text style={{color:'#000',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>Order Detail</Text>
+            </TouchableOpacity>
+              <View style={{flex:1, flexDirection:'column'}}>
+                <ScrollView style={{flex:1, width:'100%', flexDirection:'column',  backgroundColor:'#eeffff'}}>
+                  <View style={{flexDirection:'row',paddingHorizontal:10, backgroundColor:'#eeffff'}}>
                     <Text style={{flex:1, textAlign:'left', color:'#000', fontSize:18}}>DELIVERY ADDRESS</Text>
                     <TouchableOpacity style={{flex:1}} onPress={()=>NavigationService.navigate('DeliverySign')}>
                       <Text style={{textAlign:'right', color:'#6db0b8', fontSize:18}}>Change address</Text>
@@ -185,7 +186,7 @@ export default class OrderDetail_DELIVERY extends Component {
                           <Text style={{textAlign:'right', fontSize:18, flex:1}}> ${this.calculateSubTotal().toFixed(2)} </Text>
                       </View>
                       <View style={{backgroundColor:'#fff', flexDirection:'row',paddingHorizontal:10,}}>
-                          <Text style={{textAlign:'left', fontSize:18,flex:3}}> Vat (6.3%)</Text>
+                          <Text style={{textAlign:'left', fontSize:18,flex:3}}> Tax (6.3%)</Text>
                           <Text style={{textAlign:'right', fontSize:18, flex:1}}> ${(this.calculateSubTotal()*this.state.vat).toFixed(2)} </Text>
                       </View>
                       <View style={{backgroundColor:'#fff', flexDirection:'row',paddingHorizontal:10,}}>
@@ -209,15 +210,23 @@ export default class OrderDetail_DELIVERY extends Component {
                   </View>
                 </ScrollView>
               </View>
-              <View style={{width:'100%',height:60,padding:5, backgroundColor:'#eeffff',}}>
-                <View style={{flex:1, backgroundColor:'#43bc55',borderRadius:8, flexDirection:'row'}}>
-                  <TouchableOpacity onPress={()=>this.onGotoOrder()} style={{flex:1, padding:5, flexDirection:'row'}}>
-                    <Text style={{backgroundColor:'#44aa44', color:'#fff', fontSize:18, textAlign:'center', textAlignVertical:'center', fontFamily:'Gotham-Black', width:40,}}>{this.state.mycart.length}</Text>
-                    <Text style={{ color:'#fff',flex:1, fontSize:18, textAlign:'center', textAlignVertical:'center', fontFamily:'Gotham-Black', }}>Checkout</Text>
-                    <Text style={{backgroundColor:'#44aa44', color:'#fff', fontSize:14, textAlign:'center', textAlignVertical:'center', fontFamily:'Gotham-Black', paddingHorizontal:5 }}>${this.getTotalCost().toFixed(2)}</Text> 
+              </SafeAreaView>
+              <SafeAreaView style={{width:'100%',padding:5, backgroundColor:'#eeffff'}}>
+                <View style={{width:'100%', height:50, backgroundColor:'#43bc55',borderRadius:8, flexDirection:'row'}}>
+                  <TouchableOpacity onPress={()=>this.onGotoOrder()} style={{flex:1, padding:5, flexDirection:'row', justifyContents:'center'}}>
+                    <View  style={{backgroundColor:'#44aa44', width:40, justifyContent: 'center', borderRadius:3,}}>
+                      <Text style={{color:'#fff', fontSize:18, textAlign:'center', textAlignVertical:'center',}}>{this.state.mycart.length}</Text>
+                    </View>
+                      
+                    <View style={{flex:1,justifyContent: 'center',}}>
+                      <Text style={{ color:'#fff', fontSize:18, textAlign:'center', textAlignVertical:'center',  }}>Checkout</Text>
+                    </View>
+                    <View  style={{backgroundColor:'#44aa44', justifyContent: 'center', borderRadius:3,}}>
+                      <Text style={{color:'#fff', fontSize:14, textAlign:'center', textAlignVertical:'center',  paddingHorizontal:5 }}>${this.getTotalCost().toFixed(2)}</Text> 
+                    </View>
                   </TouchableOpacity>
                 </View>
-              </View>
+              </SafeAreaView>
             </ImageBackground>
         </View>
       );

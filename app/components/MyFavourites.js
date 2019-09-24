@@ -88,10 +88,11 @@ export default class MyFavourites extends Component {
             textStyle={{color:'#000'}}
           />
           <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', resizeMode:'repeat'}}>
-              <SafeAreaView style={{width:'100%', height:100, alignItems:'center', paddingTop:0, borderBottomWidth:1, borderColor:'#888'}}>
-                <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
-                <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:5, fontWeight:'bold'}}>MY FAVORITES</Text>
-              </SafeAreaView>
+          <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
+              <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
+                    <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
+                    <Text style={{color:'#000',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>My Favourites</Text>
+                </TouchableOpacity> 
 
               <ScrollView style={{flex:1, flexDirection:'column', paddingTop:10,}}>
                 {
@@ -101,14 +102,18 @@ export default class MyFavourites extends Component {
                         style={{flex:1,flexDirection:'row', marginBottom:10,backgroundColor:'rgba(255,255,255,0.6)', borderColor:'#888', borderBottomWidth:0.5, borderTopWidth:0.5}}  key={key}
                         onPress={()=>NavigationService.navigate("Product",{product_id:item.products_id})}>
                         <Image source={{uri:item.img}} style={{width:'25%',aspectRatio:1, marginLeft:20,}}></Image>
-                        <Text style={{textAlign:'left', marginLeft:10, fontSize:18,textAlignVertical:'center'}}> {item.name}</Text>
-                        <Text style={{textAlign:'right',fontSize:18,marginRight:20, flex:1, textAlignVertical:'center'}}> Count:{item.count} </Text>
+                        <View style={{marginLeft:10,justifyContent:'center'}}>
+                          <Text style={{textAlign:'left', fontSize:18,textAlignVertical:'center'}}> {item.name}</Text>
+                        </View>
+                        <View style={{marginRight:20,flex:1,justifyContent:'center'}}>
+                          <Text style={{textAlign:'right',fontSize:18,textAlignVertical:'center'}}> Count:{item.count} </Text>
+                        </View>
                       </TouchableOpacity>
                     );
                   })
                 }
               </ScrollView>
-
+</SafeAreaView>
           </ImageBackground>
         
         </View>

@@ -17,6 +17,7 @@ xcuserdata
 *.xccheckout
 *.moved-aside
 DerivedData
+Pods
 *.hmap
 *.ipa
 *.xcuserstate
@@ -54,6 +55,3 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
-
-# CocoaPods
-/ios/Pods/

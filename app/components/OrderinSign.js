@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     width: '70%', height: 60, backgroundColor: '#f11', borderWidth: 5, borderColor: 'white', alignItems: 'center', justifyContent: 'center',
   },
   btnTextStyle: {
-    fontFamily: 'Raleway-Bold', fontSize: 25, color: 'white'
+     fontSize: 25, color: 'white'
   },
   inputBoxView: {
     flex: 1, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'center', paddingHorizontal: 10
@@ -130,7 +130,7 @@ export default class OrderinSign extends Component {
                 <Image source={require('../assets/images/sign/marker.png')} style={{ height: '70%', }} resizeMode={'contain'}></Image>
               </View>
               <View style={{ flex: 5, borderLeftColor: '#808285', borderLeftWidth: 1, paddingHorizontal: 20, }}>
-                <Text style={{ color: '#000', fontSize: 15, fontFamily: 'Gotham-Medium', alignSelf: 'center', }}>
+                <Text style={{ color: '#000', fontSize: 15,  alignSelf: 'center', }}>
                   WE NEED A LITTLE MORE INFO BEFORE WE START
                 </Text>
               </View>
@@ -150,27 +150,27 @@ export default class OrderinSign extends Component {
               }}>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center' }}>
                   <Image source={require('../assets/images/sign/pickup.png')} style={{ height: '70%', marginLeft: -30 }} resizeMode={'contain'}></Image>
-                  <Text style={{ color: '#f00', fontSize: 20, fontFamily: 'Gotham-Medium', marginLeft: -30 }}>Order in, Sit in</Text>
+                  <Text style={{ color: '#f00', fontSize: 20,  marginLeft: -30 }}>Order in, Sit in</Text>
                 </View>
                 <View style={styles.inputBoxView}>
                   <View style={styles.inputBoxView1}>
                     <View style={{ flex: 3, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>FIRST</Text>
+                      <Text style={{ fontSize: 12,  color: '#000' }}>FIRST</Text>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>LAST</Text>
+                      <Text style={{ fontSize: 12,  color: '#000' }}>LAST</Text>
                     </View>
                   </View>
                   <View style={[styles.inputBoxView1, { flex: 1 }]}>
                     <View style={{ flex: 3, flexDirection: 'column', alignItems: 'flex-start', alignContent: 'center', justifyContent: 'center' }}>
                       <TextInput ref={(c)=>this._firstname=c}
-                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book' }}
+                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10,  }}
                         placeholder="First name" placeholderTextColor={'#a7a9ac'}
                       ></TextInput>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'center' }}>
                       <TextInput ref={(c)=>this._secondname=c}
-                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book' }}
+                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10,  }}
                         placeholder="Last name" placeholderTextColor={'#a7a9ac'}></TextInput>
                     </View>
                   </View>
@@ -178,35 +178,44 @@ export default class OrderinSign extends Component {
                 <View style={styles.inputBoxView}>
                   <View style={styles.inputBoxView1}>
                     <View style={{ flex: 3, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>PHONE</Text>
+                      <Text style={{ fontSize: 12,  color: '#000' }}>PHONE</Text>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column' }}>
-                      {/* <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>PICK UP TIME</Text> */}
+                      {/* <Text style={{ fontSize: 12,  color: '#000' }}>PICK UP TIME</Text> */}
                     </View>
                   </View>
                   <View style={[styles.inputBoxView1, { flex: 1 }]}>
                     <View style={{ flex: 3, flexDirection: 'column', alignItems: 'flex-start', alignContent: 'center', justifyContent: 'center' }}>
                       <TextInput  ref={(c)=>this._phonenum=c} 
-                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book' }}
+                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10,  }}
                         placeholder="xxxx" placeholderTextColor={'#a7a9ac'} keyboardType={"numeric"}
                       ></TextInput>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column', alignItems: 'stretch', alignContent: 'center', justifyContent: 'center' }}>
                       {/* <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => { this.showTimePicker() }}>
                         <TextInput editable={false} ref={(c) => this._pickuptime = c} value={this.getTimeValue()}
-                          style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book', color: '#000' }}
+                          style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10,  color: '#000' }}
                           placeholder="5:15 PM" placeholderTextColor={'#a7a9ac'}></TextInput>
                       </TouchableOpacity> */}
                     </View>
                   </View>
                 </View>
-                <View style={[styles.inputBoxView, { alignItems: 'flex-end', paddingRight: '10%' }]}>
+                <View style={[styles.inputBoxView, { paddingRight: '10%',paddingLeft: '10%', flexDirection:'row' }]}>
+                  <TouchableOpacity onPress={() => {
+                      NavigationService.navigate("Intro")
+                    }} activeOpacity={0.7}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{  color: '#939598', marginRight: 3 }}>{"<"}</Text>
+                      <Text style={{  color: '#f00' }}>BACK</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{flex:1}}></View>
                   <TouchableOpacity onPress={() => {
                       this.picksignup();
-                    }}>
+                    }} activeOpacity={0.7}>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ fontFamily: 'Gotham-Medium', color: '#f00' }}>NEXT</Text>
-                      <Text style={{ fontFamily: 'Gotham-Medium', color: '#939598', marginLeft: 3 }}>></Text>
+                      <Text style={{  color: '#f00' }}>NEXT</Text>
+                      <Text style={{  color: '#939598', marginLeft: 3 }}>></Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -216,10 +225,10 @@ export default class OrderinSign extends Component {
               <TouchableOpacity onPress={()=>{this.dialCall()}} >
               <Image source={require('../assets/images/sign/delivery_phonenum.png')} style={{height:'70%', marginBottom:0,}} resizeMode={'contain'}></Image>
               </TouchableOpacity>
-              <Text style={{color:'#000', fontFamily:'Gotham-Medium', fontSize:22}}>
+              <Text style={{color:'#000',  fontSize:22}}>
                 #SMOKINFRANKS
               </Text>
-              <Text style={{color:'#000', fontFamily:'Gotham-Medium', fontSize:22}}>
+              <Text style={{color:'#000',  fontSize:22}}>
                 #MUNCHINFRANKS
               </Text>
             </View>
@@ -229,4 +238,3 @@ export default class OrderinSign extends Component {
     );
   }
 }
-

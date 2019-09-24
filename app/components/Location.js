@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {View,  ImageBackground,StatusBar,Image,TextInput,Text,TouchableOpacity,SafeAreaView, BackHandler} from 'react-native';
 
-import MapboxGL from '@react-native-mapbox-gl/maps';
+//import MapboxGL from '@react-native-mapbox-gl/maps';
 import Geolocation from '@react-native-community/geolocation';
 import MapboxClient from 'mapbox'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const destination = {latitude: 26.4910765, longitude: -81.9426475};
 
-MapboxGL.setAccessToken('pk.eyJ1IjoibWF4amVycnkwMTA3IiwiYSI6ImNqemo3OHBpMDA1OWwzYm9zN3VpM2VucGsifQ.H2gdRfuyHM9_ddrDbwNHzw');
+//MapboxGL.setAccessToken('pk.eyJ1IjoibWF4amVycnkwMTA3IiwiYSI6ImNqemo3OHBpMDA1OWwzYm9zN3VpM2VucGsifQ.H2gdRfuyHM9_ddrDbwNHzw');
 
 const mapboxClient = new MapboxClient("pk.eyJ1IjoibWF4amVycnkwMTA3IiwiYSI6ImNqemo3OHBpMDA1OWwzYm9zN3VpM2VucGsifQ.H2gdRfuyHM9_ddrDbwNHzw");
 
@@ -82,7 +82,7 @@ componentDidMount () {
                 textContent={'Loading...'}
                 textStyle={{color:'#000'}}
               />
-              {!this.state.loading&&
+              {/* {!this.state.loading&&
                 <MapboxGL.MapView
                       styleURL={MapboxGL.StyleURL.Street}
                       zoomEnabled={true}
@@ -90,11 +90,11 @@ componentDidMount () {
                       compassEnabled={true}
                       style={{width:'100%', height:'100%'}}>
                       <MapboxGL.Camera
-                        zoomLevel={15}
+                        zoomLevel={12}
                         centerCoordinate={[this.state.origin.longitude, this.state.origin.latitude]}
                       />
                         <MapboxGL.ShapeSource id='mapbox-directions-source' shape={this.state.directions.geometry}>
-                          <MapboxGL.LineLayer
+                        <MapboxGL.LineLayer
                             id='mapbox-directions-line'
                             style={{
                               lineColor: 'red',
@@ -104,7 +104,7 @@ componentDidMount () {
                             />
                         </MapboxGL.ShapeSource> 
                   </MapboxGL.MapView>
-                }
+                } */}
             </View>
           </ImageBackground>
         </View>

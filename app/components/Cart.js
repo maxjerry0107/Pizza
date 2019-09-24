@@ -128,6 +128,9 @@ export default class Cart extends Component {
         animation: true,
         hideOnPress: true,
         delay: 0,
+        onHidden:()=>{
+          NavigationService.navigate("Intro");
+        }
       });
       return;
     }
@@ -147,33 +150,41 @@ export default class Cart extends Component {
       return (
         <View style={{flex:1,}}>
           <StatusBar hidden />
-          <View style={{width:'100%', height:100,}}>
-            <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', alignItems:'center', paddingTop:0, resizeMode:'repeat'}}>
-              <SafeAreaView style={{width:'100%', alignItems:'center', paddingTop:0,}}>
-                <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
-                <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:5, fontWeight:'bold'}}>CART</Text>
-              </SafeAreaView>
-            </ImageBackground>
-          </View>
-          <View style={{flex:1, flexDirection:'column', alignItems:'center'}}>
-            <FlatList style={{width:'100%', backgroundColor:'#eeffff', marginHorizontal:10, }}
-              data={this.state.mycart}
-              renderItem={({ item }) => (
-                  <Cartitem data={item} cost={this.calculatePrice(item)} onitempress={this.onitempress}  cartitem_change_quantity={this.cartitem_change_quantity} />
-              )}
-              numColumns={1}
-              keyExtractor={(item, index) => index}
-            />
-          </View>          
-          <View style={{width:'100%',height:60,padding:5,}}>
-            <View style={{flex:1, backgroundColor:'#43bc55',borderRadius:8, flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>this.onGotoOrderDetail()} style={{flex:1, padding:5, flexDirection:'row'}}>
-                <Text style={{backgroundColor:'#44aa44', color:'#fff', fontSize:18, textAlign:'center', textAlignVertical:'center', fontFamily:'Gotham-Black', width:40,}}>{this.state.mycart.length}</Text>
-                <Text style={{ color:'#fff',flex:1, fontSize:18, textAlign:'center', textAlignVertical:'center', fontFamily:'Gotham-Black', }}>Checkout</Text>
-                <Text style={{backgroundColor:'#44aa44', color:'#fff', fontSize:14, textAlign:'center', textAlignVertical:'center', fontFamily:'Gotham-Black', paddingHorizontal:5 }}>${this.getTotalCost()}</Text> 
-              </TouchableOpacity>
-            </View>
-          </View>
+          <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', alignItems:'center', paddingTop:0, resizeMode:'repeat'}}>
+            <SafeAreaView style={{width:'100%', flex:1, alignItems:'center', paddingTop:0,}}>
+              <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
+                  <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
+                  <Text style={{color:'#000',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>CART</Text>
+              </TouchableOpacity> 
+            
+            <View style={{flex:1, flexDirection:'column', width:'100%',backgroundColor:'#eeffff', }}>
+              <FlatList style={{width:'100%', backgroundColor:'#eeffff', marginHorizontal:0, }}
+                data={this.state.mycart}
+                renderItem={({ item }) => (
+                    <Cartitem data={item} cost={this.calculatePrice(item)} onitempress={this.onitempress}  cartitem_change_quantity={this.cartitem_change_quantity} />
+                )}
+                numColumns={1}
+                keyExtractor={(item, index) => index}
+              />
+            </View>      
+            
+            </SafeAreaView>    
+            <SafeAreaView style={{width:'100%',padding:5,backgroundColor:'#eeffff', }}>
+              <View style={{width:'100%', height:50, backgroundColor:'#43bc55',borderRadius:8, flexDirection:'row'}}>
+                <TouchableOpacity onPress={()=>this.onGotoOrderDetail()} style={{flex:1, padding:5, flexDirection:'row', justifyContents:'center'}}>
+                  <View  style={{backgroundColor:'#44aa44', width:40, justifyContent: 'center', borderRadius:3,}}>
+                    <Text style={{color:'#fff', fontSize:18, textAlign:'center', textAlignVertical:'center',}}>{this.state.mycart.length}</Text>
+                  </View>                  
+                  <View style={{flex:1,justifyContent: 'center',}}>
+                    <Text style={{ color:'#fff', fontSize:18, textAlign:'center', textAlignVertical:'center',  }}>Checkout</Text>
+                  </View>
+                  <View  style={{backgroundColor:'#44aa44', justifyContent: 'center', borderRadius:3,}}>
+                    <Text style={{color:'#fff', fontSize:14, textAlign:'center', textAlignVertical:'center',  paddingHorizontal:5 }}>${this.getTotalCost()}</Text> 
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaView>
+          </ImageBackground>
         </View>
       );
     }
