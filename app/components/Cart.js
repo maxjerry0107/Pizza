@@ -151,8 +151,8 @@ export default class Cart extends Component {
         <View style={{flex:1,}}>
           <StatusBar hidden />
           <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', alignItems:'center', paddingTop:0, resizeMode:'repeat'}}>
-            <SafeAreaView style={{width:'100%', flex:1, alignItems:'center', paddingTop:0,}}>
-              <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
+            <SafeAreaView style={{width:'100%', flex:1, alignItems:'center'}}>
+              <TouchableOpacity style={{width:'100%', height:100,alignItems:'center', paddingTop:15 , }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
                   <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
                   <Text style={{color:'#000',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>CART</Text>
               </TouchableOpacity> 

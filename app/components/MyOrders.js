@@ -88,8 +88,8 @@ export default class OrderTracking extends Component {
             textStyle={{color:'#000'}}
           />
           <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', resizeMode:'repeat'}}>
-          <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
-          <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
+          <SafeAreaView  style={{width:'100%', flex:1,}}>
+          <TouchableOpacity style={{width:'100%', height:100,alignItems:'center',paddingTop:15  }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
                     <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
                     <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>My Orders</Text>
                 </TouchableOpacity>
@@ -99,7 +99,7 @@ export default class OrderTracking extends Component {
                   this.state.orders.map ((item,key)=>{
                     
                     return (
-                      <TouchableOpacity 
+                      <TouchableOpacity activeOpacity={0.7}
                         style={{flex:1,flexDirection:'row', marginBottom:10,backgroundColor:'rgba(255,255,255,0.6)', borderColor:'#888', borderBottomWidth:0.5, borderTopWidth:0.5}}  key={key}
                         onPress={()=>NavigationService.navigate("OrderTracking",{orderid:item.orders_id})}>
                         <Image source={require('../assets/images/ordericon.png')} style={{width:'20%',aspectRatio:1}}></Image>

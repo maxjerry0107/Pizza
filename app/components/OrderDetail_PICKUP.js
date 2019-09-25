@@ -162,8 +162,8 @@ export default class OrderDetail_PICKUP extends Component {
             textContent={'Loading...'}
             textStyle={{color:'#000'}}
           />
-          <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
-          <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Cart")}>
+          <SafeAreaView  style={{width:'100%', flex:1,}}>
+          <TouchableOpacity style={{width:'100%', height:100,alignItems:'center', paddingTop:15 , }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Cart")}>
                 <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
                 <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>Order Detail</Text>
             </TouchableOpacity>

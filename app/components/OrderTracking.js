@@ -89,8 +89,8 @@ export default class OrderTracking extends Component {
           <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', resizeMode:'repeat'}}>
             {!this.state.loading&&
             <View style={{flex:1}}>
-              <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
-              <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("MyOrders")}>
+              <SafeAreaView  style={{width:'100%', flex:1,}}>
+              <TouchableOpacity style={{width:'100%', height:100,alignItems:'center', paddingTop:15 , }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("MyOrders")}>
                     <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
                     <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>Order Tracking</Text>
                 </TouchableOpacity>

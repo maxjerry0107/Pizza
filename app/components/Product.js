@@ -265,8 +265,8 @@ componentDidMount = ()=>{
         textStyle={{color:'#000'}}
       />
       <SafeAreaView style={{width:'100%', flex:1,}}>
-        <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Menu")}>
-           <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"stretch"}></Image>
+        <TouchableOpacity style={{width:'100%', height:100,alignItems:'center', paddingTop:15  }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Menu")}>
+           <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
             <Text style={{color:'#000',fontSize:22,fontFamily:'Gotham-Black', position:'absolute', bottom:0, fontWeight:'bold'}}>{this.state.product_info.name}</Text>
           </TouchableOpacity>
           <View style={{flex:1}}>
