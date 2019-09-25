@@ -131,8 +131,11 @@ android {
         applicationId "maxjerry0107.munchin.franks.pizza"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "1.01"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
     splits {
         abi {
@@ -203,7 +206,8 @@ dependencies {
     implementation project(':react-native-device-info')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.41.0'
+    //implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.41.0-SNAPSHOT'
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";
       debugImplementation files(hermesPath + "hermes-debug.aar")

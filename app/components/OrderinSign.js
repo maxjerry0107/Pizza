@@ -200,13 +200,18 @@ export default class OrderinSign extends Component {
                     </View>
                   </View>
                 </View>
-                <View style={[styles.inputBoxView, { alignItems: 'flex-end', paddingRight: '10%' }]}>
-                  <TouchableOpacity onPress={() => {
-                      this.picksignup();
-                    }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ fontFamily: 'Gotham-Medium', color: '#f00' }}>NEXT</Text>
-                      <Text style={{ fontFamily: 'Gotham-Medium', color: '#939598', marginLeft: 3 }}>></Text>
+                <View style={[styles.inputBoxView, {paddingRight:'10%', paddingLeft:'10%', flexDirection:'row',}]}>
+                  <TouchableOpacity onPress={()=>NavigationService.navigate("Intro")} activeOpacity={0.7} >
+                    <View style={{flexDirection:'row'}}>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginRight:3}}>{"<"}</Text>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>BACK</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{flex:1}}></View>
+                  <TouchableOpacity onPress={()=>this.picksignup()} activeOpacity={0.7} >
+                    <View style={{flexDirection:'row'}}>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>NEXT</Text>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginLeft:3}}>></Text>
                     </View>
                   </TouchableOpacity>
                 </View>

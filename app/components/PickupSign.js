@@ -87,7 +87,7 @@ export default class PickupSign extends Component {
     var first=this._firstname._lastNativeText;
     var second=this._secondname._lastNativeText;
     var phonenum=this._phonenum._lastNativeText;
-    var time=this._pickuptime._lastNativeText;
+    var time=this.getTimeValue();
 
     if(first==undefined||second==undefined||phonenum==undefined||time==undefined)
     {
@@ -197,21 +197,26 @@ export default class PickupSign extends Component {
                       ></TextInput>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column', alignItems: 'stretch', alignContent: 'center', justifyContent: 'center' }}>
-                      <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => { this.showTimePicker() }}>
-                        <TextInput editable={false} ref={(c) => this._pickuptime = c} value={this.getTimeValue()}
-                          style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book', color: '#000' }}
-                          placeholder="5:15 PM" placeholderTextColor={'#a7a9ac'}></TextInput>
+                      <TouchableOpacity style={{ width: '100%', height: '100%'}} onPress={() => { this.showTimePicker() }}>
+                        <Text ref={(c) => this._pickuptime = c}
+                          style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, color: '#000', fontFamily: 'Gotham-Book', }}
+                          placeholder="5:15 PM" placeholderTextColor={'#a7a9ac'}>{this.getTimeValue()}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-                <View style={[styles.inputBoxView, { alignItems: 'flex-end', paddingRight: '10%' }]}>
-                  <TouchableOpacity onPress={() => {
-                      this.picksignup();
-                    }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ fontFamily: 'Gotham-Medium', color: '#f00' }}>NEXT</Text>
-                      <Text style={{ fontFamily: 'Gotham-Medium', color: '#939598', marginLeft: 3 }}>></Text>
+                <View style={[styles.inputBoxView, {paddingRight:'10%', paddingLeft:'10%', flexDirection:'row',}]}>
+                  <TouchableOpacity onPress={()=>NavigationService.navigate("Intro")} activeOpacity={0.7} >
+                    <View style={{flexDirection:'row'}}>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginRight:3}}>{"<"}</Text>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>BACK</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{flex:1}}></View>
+                  <TouchableOpacity onPress={()=>this.picksignup()}  activeOpacity={0.7}>
+                    <View style={{flexDirection:'row'}}>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>NEXT</Text>
+                      <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginLeft:3}}>></Text>
                     </View>
                   </TouchableOpacity>
                 </View>

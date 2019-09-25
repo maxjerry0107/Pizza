@@ -170,7 +170,7 @@ componentDidMount = ()=>{
   }
   
   onSelect(value, label) {
-    this.setState({selecttypeText : label, selectedtypeId:value});
+    this.setState({selecttypeText : label.join(''), selectedtypeId:value});
   }
 
   getTypefromId = (id)=>{
@@ -247,25 +247,29 @@ componentDidMount = ()=>{
     }
     this.setState({extras:temp});
   }
+  convertText = (str) =>
+  {
+      str=str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g," ").replace(/<(.|\n)*?>/g, '').replace("\\","\"");
+      return str;
+  }
 
   render() {
     return (
       
-    <View style={{flex:1,}}>
-      <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', paddingTop:0, resizeMode:'repeat'}}>
-        <StatusBar hidden />
-        <Spinner color={'#000'}
-          visible={this.state.loading} 
-          textContent={'Loading...'}
-          textStyle={{color:'#000'}}
-        />
-        <View style={{width:'100%', height:100,borderBottomWidth:1}}>            
-            <SafeAreaView style={{width:'100%', alignItems:'center', paddingTop:0,}}>
-              <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
-              <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>{this.state.product_info.name}</Text>
-            </SafeAreaView>
-        </View>
-        <View style={{flex:1}}>
+      <View style={{flex:1, backgroundColor:'#eeffff'}}>
+      <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%',  resizeMode:'repeat'}}>
+       <StatusBar hidden />
+      <Spinner color={'#000'}
+        visible={this.state.loading} 
+        textContent={'Loading...'}
+        textStyle={{color:'#000'}}
+      />
+      <SafeAreaView style={{width:'100%', flex:1,}}>
+        <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Menu")}>
+           <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"stretch"}></Image>
+            <Text style={{color:'#000',fontSize:22,fontFamily:'Gotham-Black', position:'absolute', bottom:0, fontWeight:'bold'}}>{this.state.product_info.name}</Text>
+          </TouchableOpacity>
+          <View style={{flex:1}}>
           <Animated.ScrollView
             scrollEventThrottle={5}
             showsVerticalScrollIndicator={false}
@@ -284,7 +288,7 @@ componentDidMount = ()=>{
                 {!this.state.loading&&
                   <View style={{margin:5, width:'95%', backgroundColor:'rgba(255,255,255,0.7)', borderRadius:10, flexDirection:'column', borderWidth:1, borderColor:'#000', paddingVertical:8, paddingHorizontal:20,}}>
                     <Text style={[{color:'#000', fontFamily:'Gotham-Bold', alignSelf:'flex-start'},this.state.product_info.extras_category==undefined?{fontSize:25,}:{fontSize:18,}]}>{this.state.product_info.name}</Text>
-                    <Text style={[{color:'#000', fontFamily:'MyriadPro-Regular',alignSelf:'flex-start'},this.state.product_info.extras_category==undefined?{fontSize:22,}:{fontSize:14,}]}>{!this.state.loading&&this.state.product_info.description.toString().replace(/<(.|\n)*?>/g, '').replace("&nbsp;",'')}</Text>
+                    <Text style={[{color:'#000', fontFamily:'MyriadPro-Regular',alignSelf:'flex-start'},this.state.product_info.extras_category==undefined?{fontSize:22,}:{fontSize:14,}]}>{!this.state.loading&&this.convertText(this.state.product_info.description)}</Text>
                     
                     <Select
                         onSelect = {this.onSelect.bind(this)}
@@ -298,7 +302,7 @@ componentDidMount = ()=>{
                         {
                         this.state.product_info.Prices.map((item, key) => {
                           return(
-                            <Option key={key} value = {item.attributes_id}>{item.sizes.replace("\\","\"")} {item.size.replace("\\","\"")} - ${item.price}</Option>
+                            <Option key={key} value = {item.attributes_id}>{this.convertText(item.sizes)} {this.convertText(item.size)} - ${item.price}</Option>
                           )
                           })
                         }
@@ -373,25 +377,31 @@ componentDidMount = ()=>{
             </ImageBackground>
             }
           </Animated.ScrollView>
-          <SafeAreaView style={{height:50, width:'100%', flexDirection:'column',paddingHorizontal:20, backgroundColor:'rgba(0,0,0,0)'}}>
-                <Text style={{fontFamily:'Gotham-Bold', fontSize:13}}>Quantity</Text>
-                <View style={{flex:1, flexDirection:'row'}}>
-                  <InputSpinner max={100} types={true}
-                    min={1}  value={1}
-                    step={1} width={100} height={30} colorLeft={'#4d4d4d'} colorRight={'#008c62'}
-                    color={"white"} background={'white'}
-                    textColor={"#000"} fontSize={14} inputStyle={{padding:0}}
-                    showBorder={true} rounded={false} onChange={(num)=>this.setState({quantity:num})}
-                    buttonTextColor={"#fff"} buttonFontSize={18}/>
-                    <View style={{flex:1, paddingHorizontal:20,}}>
-                    <TouchableOpacity style={{backgroundColor:'#8a0400', height:30, borderRadius:7,alignItems:'center', justifyContent:'center', flexDirection:'row'}} onPress={()=>this.addCart()}>
-                      <Text  style={{fontFamily:'Gotham-Bold', fontSize:13, color:'#fff'}}>Add to Cart
-                      </Text><Icon name="ios-return-right" type="Ionicons" style={{marginLeft:20, color:'#fff'}}></Icon>
-                    </TouchableOpacity>
-                    </View>
-                </View>
-            </SafeAreaView>
+          
         </View>
+        </SafeAreaView>
+        <SafeAreaView style={{width:'100%', flexDirection:'column', backgroundColor:'rgba(0,0,0,0)'}}>
+          <View style={{width:'100%', height:50, backgroundColor:'rgba(0,0,0,0)'}}>
+          <Text style={{fontSize:13,fontFamily:'Gotham-Bold',  marginLeft:20}}>Quantity</Text>
+          <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
+            <View style={{paddingHorizontal:20,}}>
+            <InputSpinner max={100} types={true}
+              min={1}  value={1}
+              step={1} width={100} height={30} colorLeft={'#4d4d4d'} colorRight={'#008c62'}
+              color={"white"} background={'white'}
+              textColor={"#000"} fontSize={14} inputStyle={{padding:0}}
+              showBorder={true} rounded={false} onChange={(num)=>this.setState({quantity:num})}
+              buttonTextColor={"#fff"} buttonFontSize={18}/>
+              </View>
+              <View style={{flex:1, paddingHorizontal:20,}}>
+                <TouchableOpacity style={{backgroundColor:'#8a0400', height:30, borderRadius:7,alignItems:'center', justifyContent:'center', flexDirection:'row'}} onPress={()=>this.addCart()}>
+                  <Text  style={{fontSize:13,fontFamily:'Gotham-Bold',  color:'#fff'}}>Add to Cart
+                  </Text><Icon name="ios-return-right" type="Ionicons" style={{marginLeft:20, color:'#fff'}}></Icon>
+                </TouchableOpacity>
+              </View>
+          </View>
+          </View>
+        </SafeAreaView>
       </ImageBackground>
     </View>
     )

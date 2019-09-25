@@ -88,10 +88,11 @@ export default class OrderTracking extends Component {
             textStyle={{color:'#000'}}
           />
           <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', resizeMode:'repeat'}}>
-              <SafeAreaView style={{width:'100%', height:100, alignItems:'center', paddingTop:0, borderBottomWidth:1, borderColor:'#888'}}>
-                <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
-                <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:5, fontWeight:'bold'}}>MY ORDERS</Text>
-              </SafeAreaView>
+          <SafeAreaView  style={{width:'100%', flex:1, paddingTop:0,}}>
+          <TouchableOpacity style={{width:'100%', height:70,alignItems:'center', }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Intro")}>
+                    <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
+                    <Text style={{color:'#000',fontFamily:'Gotham-Black',fontSize:22, position:'absolute', bottom:0, fontWeight:'bold'}}>My Orders</Text>
+                </TouchableOpacity>
 
               <ScrollView style={{flex:1, flexDirection:'column', paddingTop:10,}}>
                 {
@@ -115,7 +116,7 @@ export default class OrderTracking extends Component {
                   })
                 }
               </ScrollView>
-
+                </SafeAreaView>
           </ImageBackground>
         
         </View>

@@ -15,7 +15,7 @@ render () {
     let data=this.props.data;
     console.log(data);
     return (
-        <View style={{flex:1,backgroundColor:'#fff', marginVertical:5,flexDirection:'column'}}>
+        <View style={{flex:1,backgroundColor:'#fff', marginVertical:5, marginHorizontal:5,flexDirection:'column'}}>
             <View style={{flex:1, flexDirection:'row',}}>
                 <View style={{flex:1,padding:10,justifyContent:'center', alignItems:'center'}}>
                     <Image style={{width:'100%', height:120, borderWidth:1, borderColor:'#0f0'}} resizeMode={'cover'} source={{uri:data.img}}/>
@@ -34,7 +34,7 @@ render () {
                         </TouchableOpacity>
                     </View>
                     {data.attributes.length!=0&&
-                    <Text style={{color:'#000', fontSize:16}}>
+                    <Text style={{color:'#000', fontSize:14}}>
                         {data.attributes.map((attr,key)=>{
                             return attr.name+"  $"+attr.cost+"  X"+attr.count+"\n";
                         })}  

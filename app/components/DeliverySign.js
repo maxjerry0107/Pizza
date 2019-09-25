@@ -177,19 +177,26 @@ componentDidMount = ()=>{
                       ></TextInput>
                     </View>
                   </View>
-                  <View style={[styles.inputBoxView, {alignItems:'flex-end', paddingRight:'10%'}]}>
-                      <TouchableOpacity onPress={()=>this.deliverysignup()}>
-                        <View style={{flexDirection:'row'}}>
-                          <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>NEXT</Text>
-                          <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginLeft:3}}>></Text>
-                        </View>
-                      </TouchableOpacity>
+                  <View style={[styles.inputBoxView, {paddingRight:'10%', paddingLeft:'10%', flexDirection:'row',}]}>
+                    <TouchableOpacity onPress={()=>NavigationService.navigate("Intro")}  activeOpacity={0.7}>
+                      <View style={{flexDirection:'row'}}>
+                        <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginRight:3}}>{"<"}</Text>
+                        <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>BACK</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={{flex:1}}></View>
+                    <TouchableOpacity onPress={()=>this.deliverysignup()} activeOpacity={0.7} >
+                      <View style={{flexDirection:'row'}}>
+                        <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>NEXT</Text>
+                        <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginLeft:3}}>></Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
               <View style={{flex:4, alignItems:'center', paddingTop:20}}>
                 <TouchableOpacity onPress={()=>this.dialCall()}>
-                <Image source={require('../assets/images/sign/delivery_phonenum.png')} style={{height:'80%'}} resizeMode={'contain'}></Image>
+                <Image source={require('../assets/images/sign/delivery_phonenum.png')} style={{height:'75%'}} resizeMode={'contain'}></Image>
                 </TouchableOpacity>
               </View>
             </View>

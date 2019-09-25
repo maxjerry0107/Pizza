@@ -28,6 +28,8 @@ import MyOrders from './app/components/MyOrders'
 import OrderDetail_ORDERIN from './app/components/OrderDetail_ORDERIN'
 import OrderinSign from './app/components/OrderinSign'
 import MyFavourites from './app/components/MyFavourites'
+import NavigationView from './app/components/NavigationView'
+
 console.disableYellowBox = true;
 const ActivityProject = createStackNavigator(
   {
@@ -42,7 +44,7 @@ const ActivityProject = createStackNavigator(
     OrderDetail_DELIVERY:{screen:OrderDetail_DELIVERY, navigationOptions: {header: null,}, },
     OrderTracking:{screen:OrderTracking, navigationOptions: {header: null,}, },
     MyOrders:{screen:MyOrders, navigationOptions: {header: null,}, },
-    Location:{screen:Location, navigationOptions: {header: null,}, },
+    Location:{screen:NavigationView, navigationOptions: {header: null,}, },
     OrderinSign:{screen:OrderinSign, navigationOptions: {header: null,}, },
     MyFavourites:{screen:MyFavourites, navigationOptions: {header: null,}, },
     OrderDetail_ORDERIN:{screen:OrderDetail_ORDERIN, navigationOptions: {header: null,}, },
