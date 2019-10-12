@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native'
 import NavigationService from '../../NavigationService'
 import { SafeAreaView ,NativeModules} from 'react-native';
 import { Button } from 'native-base';
+import axios from './Axios'
 import Geolocation from '@react-native-community/geolocation';
 
 
@@ -19,6 +20,29 @@ const styles = StyleSheet.create({
 export default class Intro extends Component { 
   componentDidMount = () =>{
     global.mycart=[];
+    axios.get('?req=get-pizza-location')
+    .then(response => {
+    let res=response.data;
+    console.log(res);
+    if(res.status==true)
+    {
+        global.pizza_location=res.location;
+    }
+    else
+    {
+      global.pizza_location={
+        "lat": 26.4910765,
+        "long": -81.9426475
+      };
+    }
+  })
+  .catch(function (error) {    
+    global.pizza_location={
+      "lat": 26.4910765,
+      "long": -81.9426475
+    };
+  });
+
   }
   dialCall = () => {
  
@@ -39,8 +63,8 @@ export default class Intro extends Component {
       NativeModules.MapboxNavigation.navigate(
         info.coords.latitude,
         info.coords.longitude,
-        26.4910765,
-        -81.9426475
+        global.pizza_location.lat,
+        global.pizza_location.long
       );
     });    
   }
