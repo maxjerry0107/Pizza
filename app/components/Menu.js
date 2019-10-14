@@ -32,8 +32,8 @@ export default class Menu extends Component {
       NativeModules.MapboxNavigation.navigate(
         info.coords.latitude,
         info.coords.longitude,
-        26.4910765,
-        -81.9426475
+        global.pizza_location.lat,
+        global.pizza_location.long
       );
     });    
   }
