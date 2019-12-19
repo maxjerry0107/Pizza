@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { View, ImageBackground, StatusBar, Image, TextInput, Text, TouchableOpacity, TouchableHighlight ,SafeAreaView, BackHandler,Linking} from 'react-native';
 import { StyleSheet } from 'react-native'
@@ -6,13 +7,14 @@ import { Header, Left, Title, Right, Content, Icon } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import Toast from 'react-native-root-toast'
+import {RFPercentage, RFValue} from 'react-native-responsive-fontsize'
 
 const styles = StyleSheet.create({
   btnStyle: {
     width: '70%', height: 60, backgroundColor: '#f11', borderWidth: 5, borderColor: 'white', alignItems: 'center', justifyContent: 'center',
   },
   btnTextStyle: {
-    fontFamily: 'Raleway-Bold', fontSize: 25, color: 'white'
+     fontSize: RFPercentage(4), color: 'white'
   },
   inputBoxView: {
     flex: 1, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'center', paddingHorizontal: 10
@@ -60,6 +62,7 @@ export default class PickupSign extends Component {
 
   componentDidMount = ()=>{
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+
   }
   setDate = (date) => {
 
@@ -108,9 +111,14 @@ export default class PickupSign extends Component {
         second:second,
         phonenum:phonenum,
         time:time,
+        verifiedPhone:global.myphonenumber
       }
     };
-    NavigationService.navigate('Menu')
+    let return_url = this.props.navigation.getParam("return","");
+    if(return_url == "")
+      NavigationService.navigate('Menu')
+    else
+      this.props.navigation.goBack();
   }
 
   showTimePicker = () => {
@@ -122,8 +130,12 @@ export default class PickupSign extends Component {
         <StatusBar hidden />
 
         <ImageBackground source={require('../assets/images/sign/bg.png')} style={{ width: '100%', height: '100%' }}>
-              <SafeAreaView style={{width:'100%', height:100, alignItems:'center', paddingTop:0}}>
+              <SafeAreaView style={{width:'100%', height:RFPercentage(15), alignItems:'center', paddingTop:0}}>
+              <TouchableOpacity style={{width:'100%', height:'100%', alignItems:'center'}} onPress={()=>{
+                  this.props.navigation.goBack();
+                }}>
                 <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'100%', width:'70%',}} resizeMode={"contain"}></Image>
+                </TouchableOpacity>
               </SafeAreaView>
 
         <DateTimePicker value={this.state.pickuptime} isVisible={this.state.show}
@@ -131,18 +143,18 @@ export default class PickupSign extends Component {
 
           <View style={{ flex: 1, flexDirection: 'column', paddingVertical: 10, }}>
             <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-              <View style={{ flex: 1, padding: 10 }}>
+              <View style={{ flex: 1, paddingLeft: '5%' }}>
                 <Image source={require('../assets/images/sign/marker.png')} style={{ height: '70%', }} resizeMode={'contain'}></Image>
               </View>
               <View style={{ flex: 5, borderLeftColor: '#808285', borderLeftWidth: 1, paddingHorizontal: 20, }}>
-                <Text style={{ color: '#000', fontSize: 15, fontFamily: 'Gotham-Medium', alignSelf: 'center', }}>
+                <Text style={{ color: '#000', fontSize: RFPercentage(2.5),  alignSelf: 'center', }}>
                   WE NEED A LITTLE MORE INFO BEFORE WE START
                 </Text>
               </View>
             </View>
             <View style={{ flex: 3.4, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', }}>
               <View style={{
-                width: '90%', height: '100%', backgroundColor: '#fff', borderRadius: 10, flexDirection: 'column',
+                width: '90%', height: '100%', backgroundColor: '#fff', borderRadius: RFPercentage(4), flexDirection: 'column',
                 shadowColor: "#000",
                 shadowOffset: {
                   width: 0,
@@ -154,28 +166,40 @@ export default class PickupSign extends Component {
                 elevation: 6
               }}>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center' }}>
-                  <Image source={require('../assets/images/sign/pickup.png')} style={{ height: '70%', marginLeft: -30 }} resizeMode={'contain'}></Image>
-                  <Text style={{ color: '#f00', fontSize: 20, fontFamily: 'Gotham-Medium', marginLeft: -30 }}>Pick Up</Text>
+                  <View style={{flex:1, flexDirection:'row', alignItems:'center', alignContent:'center', justifyContent:'center'}} activeOpacity={0.7}>
+                    <View style={{width:'30%', height:'100%'}}>
+                      <Image source={require('../assets/images/sign/pickup_green.png')} style={{width:'100%', height: '80%',}} resizeMode={'contain'}></Image>
+                    </View>
+                    <Text style={{ color: '#00a651', fontSize: RFPercentage(3),}}>Pick Up</Text>
+                  </View>
+                  <TouchableOpacity style={{flex:1, flexDirection:'row', alignItems:'center', alignContent:'center', justifyContent:'center'}} onPress={()=>{
+                      NavigationService.navigate("DeliverySign")
+                    }}>
+                    <View style={{width:'30%', height:'100%'}}>
+                      <Image source={require('../assets/images/sign/car.png')} style={{height:'70%',width:'100%'}} resizeMode={'contain'}></Image>
+                    </View>
+                    <Text style={{color:'#f00', fontSize:RFPercentage(3),}}>DELIVERY</Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.inputBoxView}>
                   <View style={styles.inputBoxView1}>
                     <View style={{ flex: 3, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>FIRST</Text>
+                      <Text style={{ fontSize: RFPercentage(2),  color: '#000' }}>FIRST</Text>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>LAST</Text>
+                      <Text style={{ fontSize: RFPercentage(2),  color: '#000' }}>LAST</Text>
                     </View>
                   </View>
                   <View style={[styles.inputBoxView1, { flex: 1 }]}>
                     <View style={{ flex: 3, flexDirection: 'column', alignItems: 'flex-start', alignContent: 'center', justifyContent: 'center' }}>
                       <TextInput ref={(c)=>this._firstname=c}
-                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book' }}
+                        style={{ borderWidth: 1,fontSize: RFPercentage(2), borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, }}
                         placeholder="First name" placeholderTextColor={'#a7a9ac'}
                       ></TextInput>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'center' }}>
                       <TextInput ref={(c)=>this._secondname=c}
-                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book' }}
+                        style={{ borderWidth: 1, fontSize: RFPercentage(2),borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10 }}
                         placeholder="Last name" placeholderTextColor={'#a7a9ac'}></TextInput>
                     </View>
                   </View>
@@ -183,40 +207,44 @@ export default class PickupSign extends Component {
                 <View style={styles.inputBoxView}>
                   <View style={styles.inputBoxView1}>
                     <View style={{ flex: 3, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>PHONE</Text>
+                      <Text style={{ fontSize: RFPercentage(2),  color: '#000' }}>PHONE</Text>
                     </View>
                     <View style={{ flex: 2, flexDirection: 'column' }}>
-                      <Text style={{ fontSize: 12, fontFamily: 'Gotham-Medium', color: '#000' }}>PICK UP TIME</Text>
+                      <Text style={{ fontSize: RFPercentage(2),  color: '#000' }}>PICK UP TIME</Text>
                     </View>
                   </View>
                   <View style={[styles.inputBoxView1, { flex: 1 }]}>
                     <View style={{ flex: 3, flexDirection: 'column', alignItems: 'flex-start', alignContent: 'center', justifyContent: 'center' }}>
                       <TextInput  ref={(c)=>this._phonenum=c} 
-                        style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, fontFamily: 'Gotham-Book' }}
+                        style={{ borderWidth: 1,fontSize: RFPercentage(2), borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10 }}
                         placeholder="xxxx" placeholderTextColor={'#a7a9ac'} keyboardType={"numeric"}
                       ></TextInput>
                     </View>
-                    <View style={{ flex: 2, flexDirection: 'column', alignItems: 'stretch', alignContent: 'center', justifyContent: 'center' }}>
-                      <TouchableOpacity style={{ width: '100%', height: '100%'}} onPress={() => { this.showTimePicker() }}>
+                    <View style={{ flex: 2, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'center' }}>
+                      <TouchableOpacity style={{ width: '95%', height: '100%'}} onPress={() => { this.showTimePicker() }}>
                         <Text ref={(c) => this._pickuptime = c}
-                          style={{ borderWidth: 1, borderColor: '#000', borderRadius: 7, width: '95%', height: '100%', paddingVertical: 5, paddingLeft: 10, color: '#000', fontFamily: 'Gotham-Book', }}
+                          style={{ borderWidth: 1,fontSize: RFPercentage(2), borderColor: '#000', borderRadius: 7, width: '100%', height: '100%', paddingVertical: 5, paddingLeft: 10, color: '#000' }}
                           placeholder="5:15 PM" placeholderTextColor={'#a7a9ac'}>{this.getTimeValue()}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-                <View style={[styles.inputBoxView, {paddingRight:'10%', paddingLeft:'10%', flexDirection:'row',}]}>
-                  <TouchableOpacity onPress={()=>NavigationService.navigate("Intro")} activeOpacity={0.7} >
-                    <View style={{flexDirection:'row'}}>
-                      <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginRight:3}}>{"<"}</Text>
-                      <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>BACK</Text>
+                <View style={[styles.inputBoxView, { paddingRight: '10%',paddingLeft: '10%', flexDirection:'row' }]}>
+                  <TouchableOpacity onPress={() => {
+                      NavigationService.navigate("Intro")
+                    }} activeOpacity={0.7}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{  color: '#939598', fontSize: RFPercentage(2),marginRight: 3 }}>{"<"}</Text>
+                      <Text style={{  color: '#f00',fontSize: RFPercentage(2), }}>BACK</Text>
                     </View>
                   </TouchableOpacity>
                   <View style={{flex:1}}></View>
-                  <TouchableOpacity onPress={()=>this.picksignup()}  activeOpacity={0.7}>
-                    <View style={{flexDirection:'row'}}>
-                      <Text style={{fontFamily:'Gotham-Medium', color:'#f00'}}>NEXT</Text>
-                      <Text style={{fontFamily:'Gotham-Medium', color:'#939598', marginLeft:3}}>></Text>
+                  <TouchableOpacity onPress={() => {
+                      this.picksignup();
+                    }} activeOpacity={0.7}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{  color: '#f00',fontSize: RFPercentage(2), }}>NEXT</Text>
+                      <Text style={{  color: '#939598',fontSize: RFPercentage(2), marginLeft: 3 }}>></Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -226,10 +254,10 @@ export default class PickupSign extends Component {
               <TouchableOpacity onPress={()=>{this.dialCall()}} >
               <Image source={require('../assets/images/sign/delivery_phonenum.png')} style={{height:'70%', marginBottom:0,}} resizeMode={'contain'}></Image>
               </TouchableOpacity>
-              <Text style={{color:'#000', fontFamily:'Gotham-Medium', fontSize:22}}>
+              <Text style={{color:'#000', fontSize: RFPercentage(3),}}>
                 #SMOKINFRANKS
               </Text>
-              <Text style={{color:'#000', fontFamily:'Gotham-Medium', fontSize:22}}>
+              <Text style={{color:'#000', fontSize: RFPercentage(3),}}>
                 #MUNCHINFRANKS
               </Text>
             </View>
@@ -239,4 +267,3 @@ export default class PickupSign extends Component {
     );
   }
 }
-

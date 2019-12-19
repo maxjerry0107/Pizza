@@ -23,12 +23,11 @@ import Product from './app/components/Product'
 import OrderDetail_PICKUP from './app/components/OrderDetail_PICKUP'
 import OrderDetail_DELIVERY from './app/components/OrderDetail_DELIVERY'
 import OrderTracking from './app/components/OrderTracking'
-import Location from './app/components/Location'
 import MyOrders from './app/components/MyOrders'
 import OrderDetail_ORDERIN from './app/components/OrderDetail_ORDERIN'
+import OrderDetail_SMOKE from './app/components/OrderDetail_SMOKE'
 import OrderinSign from './app/components/OrderinSign'
 import MyFavourites from './app/components/MyFavourites'
-import NavigationView from './app/components/NavigationView'
 
 console.disableYellowBox = true;
 const ActivityProject = createStackNavigator(
@@ -44,10 +43,10 @@ const ActivityProject = createStackNavigator(
     OrderDetail_DELIVERY:{screen:OrderDetail_DELIVERY, navigationOptions: {header: null,}, },
     OrderTracking:{screen:OrderTracking, navigationOptions: {header: null,}, },
     MyOrders:{screen:MyOrders, navigationOptions: {header: null,}, },
-    Location:{screen:NavigationView, navigationOptions: {header: null,}, },
     OrderinSign:{screen:OrderinSign, navigationOptions: {header: null,}, },
     MyFavourites:{screen:MyFavourites, navigationOptions: {header: null,}, },
     OrderDetail_ORDERIN:{screen:OrderDetail_ORDERIN, navigationOptions: {header: null,}, },
+    OrderDetail_SMOKE:{screen:OrderDetail_SMOKE, navigationOptions: {header: null,}, },
   },
   {
     initialRouteName: "Intro",

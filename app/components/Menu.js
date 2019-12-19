@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-navigation';
 import Toast from 'react-native-root-toast'
 import axios from './Axios'
 import Spinner from 'react-native-loading-spinner-overlay';
+import {RFPercentage, RFValue} from 'react-native-responsive-fontsize'
 
 var {height, width} = Dimensions.get('window');
 
@@ -130,13 +131,22 @@ export default class Menu extends Component {
               <TextInput placeholder='Search For Products' style={{paddingVertical:0,}} onSubmitEditing={(event) => this.searchProduct( event.nativeEvent.text)} ref={(c)=>this._keyword=c}/>
             </Item> */}
             
-            <ScrollView style={{flex:1, paddingHorizontal:0,}}>
-              <View style={{flex:1,width:'100%',justifyContent: 'center', alignItems:'center'}}>
-              <FlatList style={{marginBottom:0,}}
+               <FlatList style={{marginBottom:0,width:'100%'}}
                 data={this.state.serviceItems}
                 renderItem={({ item, key}) => (
-                  <Button transparent onPress={()=>NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})} style={{height:width/3, width:'100%', padding:0,marginVertical:-2}} key={key}>
-                      <Image style={{width:'100%', height:'110%'}} 
+                  <TouchableOpacity activeOpacity={1} onPress={()=>{
+                    if(item.active == "1")
+                      NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})
+                    else
+                    Toast.show('Coming Soon...', {
+                      position:Toast.positions.CENTER,
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                      delay: 0
+                    });
+                  }} style={{height:width/3, width:'100%', padding:0, marginVertical:-1}} key={key}>
+                      <Image style={{width:'100%', height:'105%'}} 
                       source={ {uri:item.featured_img}}
                   //    source={require('../assets/images/cate1.jpg')}
                       >
@@ -144,34 +154,31 @@ export default class Menu extends Component {
                         <Text style={{color:'rgba(0,0,0,0.6)',fontFamily:'Gotham-Medium',fontSize:22,textAlign:'center'}}>{item.name}</Text>
                       </View> */}
                       </Image>
-                  </Button>
+                  </TouchableOpacity>
                 )}
                 //Setting the number of column
                 numColumns={1}
               />
             </View>
           
-            </ScrollView>
-          </View>         
-          
           <ImageBackground source={require('../assets/images/intro/bg_footer.png')} style={{width:'100%',}}>
-            <SafeAreaView style={{backgroundColor:'transparent',flex:0}}>            
-               <View style={{height:60, width:'100%'}}>
-                    <View style={{flex:1, flexDirection:'row'}}>
+            <SafeAreaView style={{backgroundColor:'transparent',flex:0, alignItems:'center', justifyContent:'center'}} forceInset={{bottom:'always', top:'never'}}>            
+               <View style={{height:RFPercentage(10), width:'100%', alignItems:'center',}}>
+                    <View style={{flex:1, flexDirection:'row', alignItems:'center'}}>
                       <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>NavigationService.navigate('Menu')}>
-                        <Image source={require('../assets/images/menu.png')} style={{height:40,}} resizeMode={'contain'}></Image>
+                        <Image source={require('../assets/images/menu.png')} style={{height:RFPercentage(7),}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
                       <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>NavigationService.navigate('Cart')}>
-                        <Image source={require('../assets/images/cart.png')} style={{height:40,}} resizeMode={'contain'}></Image>
+                        <Image source={require('../assets/images/cart.png')} style={{height:RFPercentage(7),}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
                       <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>NavigationService.navigate("MyOrders")}>
-                        <Image source={require('../assets/images/order-s.png')} style={{height:40,}} resizeMode={'contain'}></Image>
+                        <Image source={require('../assets/images/order-s.png')} style={{height:RFPercentage(7),}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
                       <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>NavigationService.navigate("MyFavourites")}>
-                        <Image source={require('../assets/images/fav.png')} style={{height:40,}} resizeMode={'contain'}></Image>
+                        <Image source={require('../assets/images/fav.png')} style={{height:RFPercentage(7),}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
                       <TouchableOpacity style={{flex:1, padding:10, alignItems:'center'}} onPress={()=>this.gotoLocation()}>
-                        <Image source={require('../assets/images/direc.png')} style={{height:40,}} resizeMode={'contain'}></Image>
+                        <Image source={require('../assets/images/direc.png')} style={{height:RFPercentage(7),}} resizeMode={'contain'}></Image>
                       </TouchableOpacity>
                     </View>
                 </View>

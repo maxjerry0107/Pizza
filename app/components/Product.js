@@ -7,7 +7,10 @@ import NavigationService from '../../NavigationService';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-root-toast'
 import axios from './Axios'
+import smoke_api from './Smoke_Axios'
 import {Select, Option} from "react-native-chooser";
+import {RFPercentage, RFValue} from 'react-native-responsive-fontsize'
+import CheckBox from 'react-native-check-box'
 
 const {width: SCREEN_WIDTH} = Dimensions.get("window");
 const IMAGE_HEIGHT = 320;
@@ -18,8 +21,7 @@ const FADED_THEME_COLOR = "rgba(0,0,0,0)";
 
 const styles = StyleSheet.create({
   tabbarText:{
-    fontFamily:'Gotham-Bold',
-    fontSize:14,
+    fontSize:RFPercentage(2.5),
     textAlign:'center'
   },
   tabbarstyle:{
@@ -65,7 +67,7 @@ export default class ParallaxDemo extends Component {
     }}>
       {new Array(x).fill(null).map((_, i) => <Item key={i}><Text>Item {i}</Text></Item>)}
     </List></View>;
-  heights = [500, 500];
+  heights = [RFPercentage(35), RFPercentage(35)];
   constructor(props) {
     super(props);
     this.state={
@@ -76,7 +78,9 @@ export default class ParallaxDemo extends Component {
       selectedtypeId:-1,
       quantity:1,
       extras:[],
-      height: 500
+      options:[],
+      options_checklist:[],
+      height: RFPercentage(35)
     }
     this.nScroll.addListener(Animated.event([{value: this.scroll}], {useNativeDriver: false}));
   
@@ -95,61 +99,127 @@ handleBackButtonClick() {
 
 componentDidMount = ()=>{
   BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    let product_id=this.props.navigation.getParam("product_id","4");
-    let url='?req=product-one&products_id='+product_id;
+    let product_id=this.props.navigation.getParam("product_id","-1");
+    let type=this.props.navigation.getParam("type",-1);
 
-    axios.get(url)
-    .then(response => {
-      let res=response.data;
-      console.log(res);
-      if(res.status==true)
-      {
-        let temp=[];
-        this.setState({selectedtypeId:res.product.Prices[0].attributes_id});
-        let item=res.product.Prices[0];
-        this.setState({selecttypeText:item.sizes.replace("\\","\"")+" "+item.size.replace("\\","\"")+" - $"+item.price});
-        if(res.product.extras.length!=0)
+    if(product_id=="-4"||type==-1)
+    {
+      return;
+    }
+
+    if(type == 1)
+    {
+      let url='?req=product-one&products_id='+product_id;
+
+      axios.get(url)
+      .then(response => {
+        let res=response.data;
+        console.log(res);
+        if(res.status==true)
         {
-          for(i=0;i<res.product.extras.length;i++)
+          let temp=[];
+          this.setState({selectedtypeId:res.product.Prices[0].attributes_id});
+          let item=res.product.Prices[0];
+          this.setState({selecttypeText:item.sizes.replace("\\","\"")+" "+item.size.replace("\\","\"")+" $"+item.price});
+          
+          let options_checklistss=[];
+          if(res.product.options!=null||res.product.options!="")
           {
-            const item={
-              ...res.product.extras[i],
-              count:0
-            }
-            temp.push(item);
+            let options = res.product.options.split(",");
+            this.setState({options:options});
+            options.forEach((option)=>{
+              if(option.replace(" ","")!="")
+              options_checklistss.push(true);
+            })
           }
-        } 
-        this.setState({loading:false, product_info:res.product,extras:temp});
-      }
-      else
-      {
+          this.setState({options_checklist:options_checklistss});
+          if(res.product.extras.length!=0)
+          {
+            for(i=0;i<res.product.extras.length;i++)
+            {
+              const item={
+                ...res.product.extras[i],
+                count:0
+              }
+              temp.push(item);
+            }
+          } 
+          this.setState({loading:false, product_info:res.product,extras:temp});
+        }
+        else
+        {
+          this.setState({loading:false,});
+          Toast.show('No data.', {
+            position:Toast.positions.CENTER,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            onHidden: () => {
+              this.props.navigation.goBack(null);
+            }
+          });
+        }
+      })
+      .catch(function (error) {
         this.setState({loading:false,});
-        Toast.show('No data.', {
-          position:Toast.positions.CENTER,
+        Toast.show('Can\'t connect to server.', {
+          position:Toast.positions.TOP,
           shadow: true,
           animation: true,
           hideOnPress: true,
           delay: 0,
           onHidden: () => {
-            this.props.navigation.goBack(null);
+            NavigationService.navigate("Intro");
           }
         });
-      }
-    })
-    .catch(function (error) {
-      this.setState({loading:false,});
-      Toast.show('Can\'t connect to server.', {
-        position:Toast.positions.TOP,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        onHidden: () => {
-          NavigationService.navigate("Intro");
-        }
       });
-    });
+    }
+    else if(type==2)
+    {
+      let url='?req=product-one&products_id='+product_id;
 
+      smoke_api.get(url)
+      .then(response => {
+        let res=response.data;
+        console.log(res);
+        if(res.status==true)
+        {
+           let temp=[];
+           this.setState({selectedtypeId:0});
+           let item=res.product.Prices[0];
+           this.setState({selecttypeText:item.size.replace("\\","\"")+"  $"+item.price});          
+           this.setState({loading:false, product_info:res.product,extras:temp});
+        }
+        else
+        {
+          this.setState({loading:false,});
+          Toast.show('No data.', {
+            position:Toast.positions.CENTER,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            onHidden: () => {
+              this.props.navigation.goBack(null);
+            }
+          });
+        }
+      })
+      .catch(function (error) {
+        this.setState({loading:false,});
+        Toast.show('Can\'t connect to server.', {
+          position:Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          onHidden: () => {
+            NavigationService.navigate("Intro");
+          }
+        });
+      });
+    }
   }
 
   
@@ -179,7 +249,10 @@ componentDidMount = ()=>{
     {
       const element=this.state.product_info.Prices[i];
       console.log(element.attributes_id+"---"+id);
-      if(element.attributes_id==id)
+      let myid = element.attributes_id;
+      if(element.attributes_id==undefined)
+        myid = i;
+      if(myid==id)
       {
         type=element;
         break;
@@ -189,6 +262,7 @@ componentDidMount = ()=>{
   }
 
   addCart = () =>{
+    let type=this.props.navigation.getParam("type",-1);
 
     if(this.state.selectedtypeId==-1)
     {
@@ -202,6 +276,14 @@ componentDidMount = ()=>{
       return;
     }
 
+    let options_str="";
+    this.state.options_checklist.forEach((item,index)=>{
+      if(item)
+      {
+        options_str+=","+this.state.options[index];
+      }
+    })
+
     const selectedType=this.getTypefromId(this.state.selectedtypeId);
     let cartitem = {
       index:0,
@@ -210,9 +292,11 @@ componentDidMount = ()=>{
       img:this.state.product_info.img,
       description:this.state.product_info.description,
       type:this.state.selectedtypeId,
-      type_name:selectedType.sizes+" "+selectedType.size,
+      type_name:(selectedType.sizes!=undefined?selectedType.sizes:"")+" "+selectedType.size,
       price:selectedType.price,
       quantity:this.state.quantity,
+      options:options_str.substring(1),
+      product_type:type
     };
     let attributes=[];
 
@@ -249,60 +333,91 @@ componentDidMount = ()=>{
   }
   convertText = (str) =>
   {
-      str=str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g," ").replace(/<(.|\n)*?>/g, '').replace("\\","\"");
+    if(str==null || str ==undefined)
+      return "";
+    str=str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g," ").replace(/<(.|\n)*?>/g, '').replace("\\","\"");
       return str;
   }
 
   render() {
+    
+    let type=this.props.navigation.getParam("type",-1);
     return (
       
-      <View style={{flex:1, backgroundColor:'#eeffff'}}>
-      <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%',  resizeMode:'repeat'}}>
-       <StatusBar hidden />
-      <Spinner color={'#000'}
-        visible={this.state.loading} 
-        textContent={'Loading...'}
-        textStyle={{color:'#000'}}
-      />
-      <SafeAreaView style={{width:'100%', flex:1,}}>
-        <TouchableOpacity style={{width:'100%', height:100,alignItems:'center', paddingTop:15  }} activeOpacity={0.8} onPress={()=>NavigationService.navigate("Menu")}>
-           <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
-            <Text style={{color:'#000',fontSize:22,fontFamily:'Gotham-Black', position:'absolute', bottom:0, fontWeight:'bold'}}>{this.state.product_info.name}</Text>
+    <View style={{flex:1,}}>
+      <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', paddingTop:0, resizeMode:'repeat'}}>
+        <StatusBar hidden />
+        <Spinner color={'#000'}
+          visible={this.state.loading} 
+          textContent={'Loading...'}
+          textStyle={{color:'#000'}}
+        />        
+        <SafeAreaView style={{width:'100%', flex:1,  alignItems:'center',}}>
+        <TouchableOpacity style={{width:'100%', height:RFPercentage(10),alignItems:'center',}} activeOpacity={0.8} onPress={()=>{
+          this.props.navigation.goBack();
+        }}>
+            <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
           </TouchableOpacity>
-          <View style={{flex:1}}>
+          <View style={{flex:1,width:'100%'}}>
           <Animated.ScrollView
             scrollEventThrottle={5}
             showsVerticalScrollIndicator={false}
             onScroll={Animated.event([{nativeEvent: {contentOffset: {y: this.nScroll}}}], {useNativeDriver: true})}
-            style={{zIndex: 0}}>
+            style={{zIndex: 0, width:'100%',}}>
             <Animated.View style={{
               transform: [{translateY: Animated.multiply(this.nScroll, 0.65)}, {scale: this.imgScale}],
-              backgroundColor: 'rgba(0,0,0,0)'
+              backgroundColor: 'rgba(0,0,0,0)',width: "100%", 
             }}>
               <Animated.View
-                style={{ width: "100%", opacity: this.imgOpacity,backgroundColor:'rgba(0,0,0,0)' }}>
-                  <View style={{width:'100%', height:220,backgroundColor:'rgba(0,0,0,0)'}}>
+                style={{ width: "100%", opacity: this.imgOpacity,backgroundColor:'rgba(0,0,0,0)', alignItems:'center' }}>
+                  <View style={{width:'100%', height:RFPercentage(35),backgroundColor:'rgba(0,0,0,0)'}}>
                 <Image source={{uri:this.state.product_info.img}} style={{width:'100%', height:'100%', alignItems:'center', paddingTop:10,}} resizeMode={"cover"}>
                   </Image>
                 </View>
                 {!this.state.loading&&
-                  <View style={{margin:5, width:'95%', backgroundColor:'rgba(255,255,255,0.7)', borderRadius:10, flexDirection:'column', borderWidth:1, borderColor:'#000', paddingVertical:8, paddingHorizontal:20,}}>
-                    <Text style={[{color:'#000', fontFamily:'Gotham-Bold', alignSelf:'flex-start'},this.state.product_info.extras_category==undefined?{fontSize:25,}:{fontSize:18,}]}>{this.state.product_info.name}</Text>
-                    <Text style={[{color:'#000', fontFamily:'MyriadPro-Regular',alignSelf:'flex-start'},this.state.product_info.extras_category==undefined?{fontSize:22,}:{fontSize:14,}]}>{!this.state.loading&&this.convertText(this.state.product_info.description)}</Text>
+                  <View style={{marginTop:5, width:'95%', backgroundColor:'rgba(255,255,255,0.7)', borderRadius:10, flexDirection:'column', borderWidth:1, borderColor:'#000', paddingVertical:8, paddingHorizontal:20,}}>
+                    <Text style={[{color:'#000', alignSelf:'center'},{fontSize:RFPercentage(3)}]}>{this.state.product_info.name}</Text>
+                    <Text style={[{color:'#000', alignSelf:'flex-start'},{fontSize:RFPercentage(2.8)}]}>{this.convertText(this.state.product_info.description)}</Text>
                     
+                    {this.state.options_checklist.length!=0&&<Text style={[{color:'#000', alignSelf:'flex-start'},{fontSize:RFPercentage(2.3)}]}>Included Toppings (Uncheck Undesired)</Text>
+                      }
+                    <View style={{width:'100%', flexDirection:'row', flexWrap:'wrap'}}>                      
+                    {
+                      this.state.options_checklist.map((item,key)=>{
+                        return (
+                          <CheckBox
+                              style={{width:'50%'}}
+                              onClick={()=>{
+                                options_checklist = this.state.options_checklist;
+                                options_checklist[key] = !options_checklist[key];
+                                this.setState({
+                                  options_checklist:options_checklist
+                                })
+                              }}
+                              checkedCheckBoxColor = {"#0a0"}
+                              uncheckedCheckBoxColor = {"#a00"}
+                              rightTextStyle = {this.state.options_checklist[key]?{color:'#0a0'}:{color:'#a00'}}
+                              isChecked={this.state.options_checklist[key]}
+                              rightText={this.state.options[key]}
+                          />
+                        );
+                      })
+                    }
+                    </View>
+
                     <Select
                         onSelect = {this.onSelect.bind(this)}
                         defaultText={this.state.selecttypeText}
                         style = {{borderWidth : 1,borderColor:'#000', width:'100%', paddingVertical:3,}}
                         transparent={true}
                         backdropStyle={{backgroundColor:'rgba(0,0,0,0.7)'}}
-                        textStyle = {{fontSize:16}}
+                        textStyle = {{fontSize:RFPercentage(2.5),}}
                         optionListStyle = {{backgroundColor : "#F5FCFF", width:'80%'}}
                       >
                         {
                         this.state.product_info.Prices.map((item, key) => {
                           return(
-                            <Option key={key} value = {item.attributes_id}>{this.convertText(item.sizes)} {this.convertText(item.size)} - ${item.price}</Option>
+                            <Option key={key} value = {item.attributes_id}>{this.convertText(item.sizes)} {this.convertText(item.size)}  ${item.price}</Option>
                           )
                           })
                         }
@@ -313,14 +428,16 @@ componentDidMount = ()=>{
             </Animated.View>
             {!this.state.loading&&this.state.product_info.extras_category!=undefined&&
             <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', paddingTop:0, resizeMode:'repeat'}}>
-            <Tabs tabContainerStyle={{height:40,backgroundColor:'rgba(0,0,0,0)'}}
+            <Text style={[{color:'#000', alignSelf:'center', marginTop:RFPercentage(2)},{fontSize:RFPercentage(2.3)}]}>Additional Available Toppings</Text>
+            <Tabs tabContainerStyle={{height:RFPercentage(5),backgroundColor:'rgba(0,0,0,0)'}}
               prerenderingSiblingsNumber={3}
               onChangeTab={({i}) => {
                 this.setState({activeTab: i})
               }}
               renderTabBar={(props) => 
               <Animated.View style={{transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "rgba(0,0,0,0)"}}>
-                <ScrollableTab {...props} style={{backgroundColor:'rgba(0,0,0,0)'}}
+                <ScrollableTab {...props} style={{backgroundColor:'rgba(0,0,0,0)',
+                  height:RFPercentage(5),}}
                   renderTab={(name, page, active, onPress, onLayout) => (
                     <TouchableOpacity key={page}
                                       onPress={() => onPress(page)}
@@ -381,22 +498,22 @@ componentDidMount = ()=>{
         </View>
         </SafeAreaView>
         <SafeAreaView style={{width:'100%', flexDirection:'column', backgroundColor:'rgba(0,0,0,0)'}}>
-          <View style={{width:'100%', height:50, backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{fontSize:13,fontFamily:'Gotham-Bold',  marginLeft:20}}>Quantity</Text>
+          <View style={{width:'100%', height:RFPercentage(8), backgroundColor:'rgba(0,0,0,0)'}}>
+          <Text style={{fontSize:RFPercentage(2.2), marginLeft:20}}>Quantity</Text>
           <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
             <View style={{paddingHorizontal:20,}}>
             <InputSpinner max={100} types={true}
               min={1}  value={1}
-              step={1} width={100} height={30} colorLeft={'#4d4d4d'} colorRight={'#008c62'}
+              step={1} width={RFPercentage(18)} height={RFPercentage(5)} colorLeft={'#4d4d4d'} colorRight={'#008c62'}
               color={"white"} background={'white'}
-              textColor={"#000"} fontSize={14} inputStyle={{padding:0}}
+              textColor={"#000"} fontSize={RFPercentage(2.2)} inputStyle={{padding:0}}
               showBorder={true} rounded={false} onChange={(num)=>this.setState({quantity:num})}
-              buttonTextColor={"#fff"} buttonFontSize={18}/>
+              buttonTextColor={"#fff"} buttonFontSize={RFPercentage(2.2)}/>
               </View>
               <View style={{flex:1, paddingHorizontal:20,}}>
-                <TouchableOpacity style={{backgroundColor:'#8a0400', height:30, borderRadius:7,alignItems:'center', justifyContent:'center', flexDirection:'row'}} onPress={()=>this.addCart()}>
-                  <Text  style={{fontSize:13,fontFamily:'Gotham-Bold',  color:'#fff'}}>Add to Cart
-                  </Text><Icon name="ios-return-right" type="Ionicons" style={{marginLeft:20, color:'#fff'}}></Icon>
+                <TouchableOpacity style={{backgroundColor:'#8a0400', height:RFPercentage(5), borderRadius:7,alignItems:'center', justifyContent:'center', flexDirection:'row'}} onPress={()=>this.addCart()}>
+                  <Text  style={{fontSize:RFPercentage(2.5), color:'#fff'}}>Add to Cart
+                  </Text><Icon name="ios-return-right" type="Ionicons" style={{marginLeft:20, fontSize:RFPercentage(2.5),color:'#fff'}}></Icon>
                 </TouchableOpacity>
               </View>
           </View>
