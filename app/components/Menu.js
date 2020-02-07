@@ -125,13 +125,13 @@ export default class Menu extends Component {
               </SafeAreaView>
             </ImageBackground>
           </View> */}
-          <View style={{flex:1, flexDirection:'column', alignItems:'center', paddingTop:0 }}>
+          <View style={{flex:1, flexDirection:'column', alignItems:'center', paddingTop:0, width:'100%' }}>
             {/* <Item rounded style={{paddingLeft:10, height:40, width:'95%', borderColor:'#aaa',fontFamily:'Gotham-Medium', borderRadius:8, marginBottom:5, }}>
               <Icon active name='search' />
               <TextInput placeholder='Search For Products' style={{paddingVertical:0,}} onSubmitEditing={(event) => this.searchProduct( event.nativeEvent.text)} ref={(c)=>this._keyword=c}/>
             </Item> */}
             
-               <FlatList style={{marginBottom:0,width:'100%'}}
+               {/* <FlatList style={{marginBottom:0,width:'100%'}}
                 data={this.state.serviceItems}
                 renderItem={({ item, key}) => (
                   <TouchableOpacity activeOpacity={1} onPress={()=>{
@@ -145,20 +145,37 @@ export default class Menu extends Component {
                       hideOnPress: true,
                       delay: 0
                     });
-                  }} style={{height:width/3, width:'100%', padding:0, marginVertical:-1}} key={key}>
+                  }} style={{flex:1, width:'100%', padding:0, marginVertical:-1}} key={key}>
                       <Image style={{width:'100%', height:'105%'}} 
                       source={ {uri:item.featured_img}}
-                  //    source={require('../assets/images/cate1.jpg')}
                       >
-                      {/* <View style={{backgroundColor:'rgba(255,255,255,0.6)', width:'60%', height:40, justifyContent: 'center',alignItems: 'center',alignSelf:'center', borderBottomLeftRadius:10, borderBottomRightRadius:10, borderRadius:10,}}>
-                        <Text style={{color:'rgba(0,0,0,0.6)',fontFamily:'Gotham-Medium',fontSize:22,textAlign:'center'}}>{item.name}</Text>
-                      </View> */}
                       </Image>
                   </TouchableOpacity>
                 )}
-                //Setting the number of column
                 numColumns={1}
-              />
+              /> */}
+              {this.state.serviceItems.map((item, index)=>{
+                return (
+                <TouchableOpacity activeOpacity={1} onPress={()=>{
+                    if(item.active == "1")
+                      NavigationService.navigate("Submenu",{menuname:item.name, catId:item.categories_id})
+                    else
+                    Toast.show('Coming Soon...', {
+                      position:Toast.positions.CENTER,
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                      delay: 0
+                    });
+                  }} style={{flex:1, width:'100%', padding:0, marginVertical:-1}} key={index}>
+                      <Image style={{width:'100%', height:'105%'}} 
+                      source={ {uri:item.featured_img}}
+                      >
+                      </Image>
+                  </TouchableOpacity>);
+              })
+
+              }
             </View>
           
           <ImageBackground source={require('../assets/images/intro/bg_footer.png')} style={{width:'100%',}}>

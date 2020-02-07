@@ -1,18 +1,41 @@
-import React, {Component} from "react";
-import {Animated, Dimensions, FlatList, Text, TouchableOpacity, View,StyleSheet, ImageBackground,SafeAreaView, StatusBar, Image,BackHandler} from "react-native";
-import {Body, Icon, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title} from "native-base";
-import InputSpinner from './myspinner';
-import ProductRecord from './ProductRecord';
-import NavigationService from '../../NavigationService';
-import Spinner from 'react-native-loading-spinner-overlay';
-import Toast from 'react-native-root-toast'
-import axios from './Axios'
-import smoke_api from './Smoke_Axios'
-import {Select, Option} from "react-native-chooser";
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize'
-import CheckBox from 'react-native-check-box'
+import React, { Component } from "react";
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  Image,
+  BackHandler
+} from "react-native";
+import {
+  Body,
+  Icon,
+  List,
+  ListItem as Item,
+  ScrollableTab,
+  Tab,
+  TabHeading,
+  Tabs,
+  Title
+} from "native-base";
+import InputSpinner from "./myspinner";
+import ProductRecord from "./ProductRecord";
+import NavigationService from "../../NavigationService";
+import Spinner from "react-native-loading-spinner-overlay";
+import Toast from "react-native-root-toast";
+import axios from "./Axios";
+import smoke_api from "./Smoke_Axios";
+import { Select, Option } from "react-native-chooser";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import CheckBox from "react-native-check-box";
 
-const {width: SCREEN_WIDTH} = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const IMAGE_HEIGHT = 320;
 const HEADER_HEIGHT = 0;
 const SCROLL_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT;
@@ -20,12 +43,12 @@ const THEME_COLOR = "rgba(0,0,0,0)";
 const FADED_THEME_COLOR = "rgba(0,0,0,0)";
 
 const styles = StyleSheet.create({
-  tabbarText:{
-    fontSize:RFPercentage(2.5),
-    textAlign:'center'
+  tabbarText: {
+    fontSize: RFPercentage(2.5),
+    textAlign: "center"
   },
-  tabbarstyle:{
-    backgroundColor:'rgba(255,255,255,0)',
+  tabbarstyle: {
+    backgroundColor: "rgba(255,255,255,0)"
   }
 });
 
@@ -58,177 +81,202 @@ export default class ParallaxDemo extends Component {
   });
   imgOpacity = this.nScroll.interpolate({
     inputRange: [0, SCROLL_HEIGHT],
-    outputRange: [1, 0],
+    outputRange: [1, 0]
   });
-  tabContent = (x, i) => <View style={{height: this.state.height}}>
-    <List onLayout={({nativeEvent: {layout: {height}}}) => {
-      this.heights[i] = height;
-      if (this.state.activeTab === i) this.setState({height})
-    }}>
-      {new Array(x).fill(null).map((_, i) => <Item key={i}><Text>Item {i}</Text></Item>)}
-    </List></View>;
+  tabContent = (x, i) => (
+    <View style={{ height: this.state.height }}>
+      <List
+        onLayout={({
+          nativeEvent: {
+            layout: { height }
+          }
+        }) => {
+          this.heights[i] = height;
+          if (this.state.activeTab === i) this.setState({ height });
+        }}
+      >
+        {new Array(x).fill(null).map((_, i) => (
+          <Item key={i}>
+            <Text>Item {i}</Text>
+          </Item>
+        ))}
+      </List>
+    </View>
+  );
   heights = [RFPercentage(35), RFPercentage(35)];
   constructor(props) {
     super(props);
-    this.state={
-      activeTab:0,
-      loading:true,
-      product_info:[],
-      selecttypeText : "Select Pizza Type",
-      selectedtypeId:-1,
-      quantity:1,
-      extras:[],
-      options:[],
-      options_checklist:[],
+    this.state = {
+      activeTab: 0,
+      loading: true,
+      product_info: [],
+      selecttypeText: "Select Pizza Type",
+      selectedtypeId: -1,
+      quantity: 1,
+      extras: [],
+      options: [],
+      options_checklist: [],
       height: RFPercentage(35)
-    }
-    this.nScroll.addListener(Animated.event([{value: this.scroll}], {useNativeDriver: false}));
-  
+    };
+    this.nScroll.addListener(
+      Animated.event([{ value: this.scroll }], { useNativeDriver: false })
+    );
+
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
 
-componentWillUnmount() {
-  BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-}
+  handleBackButtonClick() {
+    this.props.navigation.goBack();
+    return true;
+  }
 
-handleBackButtonClick() {
-  this.props.navigation.goBack();
-  return true;
-}
+  componentDidMount = () => {
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+    let product_id = this.props.navigation.getParam("product_id", "-1");
+    let type = this.props.navigation.getParam("type", -1);
 
-componentDidMount = ()=>{
-  BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    let product_id=this.props.navigation.getParam("product_id","-1");
-    let type=this.props.navigation.getParam("type",-1);
-
-    if(product_id=="-4"||type==-1)
-    {
+    if (product_id == "-4" || type == -1) {
       return;
     }
 
-    if(type == 1)
-    {
-      let url='?req=product-one&products_id='+product_id;
+    if (type == 1) {
+      let url = "?req=product-one&products_id=" + product_id;
 
-      axios.get(url)
-      .then(response => {
-        let res=response.data;
-        console.log(res);
-        if(res.status==true)
-        {
-          let temp=[];
-          this.setState({selectedtypeId:res.product.Prices[0].attributes_id});
-          let item=res.product.Prices[0];
-          this.setState({selecttypeText:item.sizes.replace("\\","\"")+" "+item.size.replace("\\","\"")+" $"+item.price});
-          
-          let options_checklistss=[];
-          if(res.product.options!=null||res.product.options!="")
-          {
-            let options = res.product.options.split(",");
-            this.setState({options:options});
-            options.forEach((option)=>{
-              if(option.replace(" ","")!="")
-              options_checklistss.push(true);
-            })
-          }
-          this.setState({options_checklist:options_checklistss});
-          if(res.product.extras.length!=0)
-          {
-            for(i=0;i<res.product.extras.length;i++)
-            {
-              const item={
-                ...res.product.extras[i],
-                count:0
+      axios
+        .get(url)
+        .then(response => {
+          let res = response.data;
+          console.log(res);
+          if (res.status == true) {
+            let temp = [];
+            this.setState({
+              selectedtypeId: res.product.Prices[0].attributes_id
+            });
+            let item = res.product.Prices[0];
+            this.setState({
+              selecttypeText:
+                item.sizes.replace("\\", '"') +
+                " " +
+                item.size.replace("\\", '"') +
+                " $" +
+                item.price
+            });
+
+            let options_checklistss = [];
+            if (res.product.options != null || res.product.options != "") {
+              let options = res.product.options.split(",");
+              this.setState({ options: options });
+              options.forEach(option => {
+                if (option.replace(" ", "") != "")
+                  options_checklistss.push(true);
+              });
+            }
+            this.setState({ options_checklist: options_checklistss });
+            if (res.product.extras.length != 0) {
+              for (i = 0; i < res.product.extras.length; i++) {
+                const item = {
+                  ...res.product.extras[i],
+                  count: 0
+                };
+                temp.push(item);
               }
-              temp.push(item);
             }
-          } 
-          this.setState({loading:false, product_info:res.product,extras:temp});
-        }
-        else
-        {
-          this.setState({loading:false,});
-          Toast.show('No data.', {
-            position:Toast.positions.CENTER,
+            this.setState({
+              loading: false,
+              product_info: res.product,
+              extras: temp
+            });
+          } else {
+            this.setState({ loading: false });
+            Toast.show("No data.", {
+              position: Toast.positions.CENTER,
+              shadow: true,
+              animation: true,
+              hideOnPress: true,
+              delay: 0,
+              onHidden: () => {
+                this.props.navigation.goBack(null);
+              }
+            });
+          }
+        })
+        .catch(function(error) {
+          this.setState({ loading: false });
+          Toast.show("Can't connect to server.", {
+            position: Toast.positions.TOP,
             shadow: true,
             animation: true,
             hideOnPress: true,
             delay: 0,
             onHidden: () => {
-              this.props.navigation.goBack(null);
+              NavigationService.navigate("Intro");
             }
           });
-        }
-      })
-      .catch(function (error) {
-        this.setState({loading:false,});
-        Toast.show('Can\'t connect to server.', {
-          position:Toast.positions.TOP,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          onHidden: () => {
-            NavigationService.navigate("Intro");
-          }
         });
-      });
-    }
-    else if(type==2)
-    {
-      let url='?req=product-one&products_id='+product_id;
+    } else if (type == 2) {
+      let url = "?req=product-one&products_id=" + product_id;
 
-      smoke_api.get(url)
-      .then(response => {
-        let res=response.data;
-        console.log(res);
-        if(res.status==true)
-        {
-           let temp=[];
-           this.setState({selectedtypeId:0});
-           let item=res.product.Prices[0];
-           this.setState({selecttypeText:item.size.replace("\\","\"")+"  $"+item.price});          
-           this.setState({loading:false, product_info:res.product,extras:temp});
-        }
-        else
-        {
-          this.setState({loading:false,});
-          Toast.show('No data.', {
-            position:Toast.positions.CENTER,
+      smoke_api
+        .get(url)
+        .then(response => {
+          let res = response.data;
+          console.log(res);
+          if (res.status == true) {
+            let temp = [];
+            this.setState({ selectedtypeId: 0 });
+            let item = res.product.Prices[0];
+            this.setState({
+              selecttypeText: item.size.replace("\\", '"') + "  $" + item.price
+            });
+            this.setState({
+              loading: false,
+              product_info: res.product,
+              extras: temp
+            });
+          } else {
+            this.setState({ loading: false });
+            Toast.show("No data.", {
+              position: Toast.positions.CENTER,
+              shadow: true,
+              animation: true,
+              hideOnPress: true,
+              delay: 0,
+              onHidden: () => {
+                this.props.navigation.goBack(null);
+              }
+            });
+          }
+        })
+        .catch(function(error) {
+          this.setState({ loading: false });
+          Toast.show("Can't connect to server.", {
+            position: Toast.positions.TOP,
             shadow: true,
             animation: true,
             hideOnPress: true,
             delay: 0,
             onHidden: () => {
-              this.props.navigation.goBack(null);
+              NavigationService.navigate("Intro");
             }
           });
-        }
-      })
-      .catch(function (error) {
-        this.setState({loading:false,});
-        Toast.show('Can\'t connect to server.', {
-          position:Toast.positions.TOP,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          onHidden: () => {
-            NavigationService.navigate("Intro");
-          }
         });
-      });
     }
-  }
+  };
 
-  
-  getAttributesByid(id)
-  {
-    let attributes=[];
+  getAttributesByid(id) {
+    let attributes = [];
     this.state.product_info.extras.forEach(function(element) {
-      if(element.attribute_categories_id==id)
-      {
+      if (element.attribute_categories_id == id) {
         attributes.push(element);
       }
     });
@@ -236,291 +284,535 @@ componentDidMount = ()=>{
   }
 
   setActiveTab(index) {
-    this.setState({activeTab:index});
-  }
-  
-  onSelect(value, label) {
-    this.setState({selecttypeText : label.join(''), selectedtypeId:value});
+    this.setState({ activeTab: index });
   }
 
-  getTypefromId = (id)=>{
-    let type={};
-    for(i=0;i<this.state.product_info.Prices.length;i++)
-    {
-      const element=this.state.product_info.Prices[i];
-      console.log(element.attributes_id+"---"+id);
+  onSelect(value, label) {
+    this.setState({ selecttypeText: label.join(""), selectedtypeId: value });
+  }
+
+  getTypefromId = id => {
+    let type = {};
+    for (i = 0; i < this.state.product_info.Prices.length; i++) {
+      const element = this.state.product_info.Prices[i];
+      console.log(element.attributes_id + "---" + id);
       let myid = element.attributes_id;
-      if(element.attributes_id==undefined)
-        myid = i;
-      if(myid==id)
-      {
-        type=element;
+      if (element.attributes_id == undefined) myid = i;
+      if (myid == id) {
+        type = element;
         break;
       }
     }
     return type;
-  }
+  };
 
-  addCart = () =>{
-    let type=this.props.navigation.getParam("type",-1);
+  addCart = () => {
+    let type = this.props.navigation.getParam("type", -1);
 
-    if(this.state.selectedtypeId==-1)
-    {
-      Toast.show('Please select the type.', {
-        position:Toast.positions.CENTER,
+    if (this.state.selectedtypeId == -1) {
+      Toast.show("Please select the type.", {
+        position: Toast.positions.CENTER,
         shadow: true,
         animation: true,
         hideOnPress: true,
-        delay: 0,
+        delay: 0
       });
       return;
     }
 
-    let options_str="";
-    this.state.options_checklist.forEach((item,index)=>{
-      if(item)
-      {
-        options_str+=","+this.state.options[index];
+    let options_str = "";
+    this.state.options_checklist.forEach((item, index) => {
+      if (item) {
+        options_str += "," + this.state.options[index];
       }
-    })
+    });
 
-    const selectedType=this.getTypefromId(this.state.selectedtypeId);
+    const selectedType = this.getTypefromId(this.state.selectedtypeId);
     let cartitem = {
-      index:0,
-      product_id:this.state.product_info.id,
-      name:this.state.product_info.name,
-      img:this.state.product_info.img,
-      description:this.state.product_info.description,
-      type:this.state.selectedtypeId,
-      type_name:(selectedType.sizes!=undefined?selectedType.sizes:"")+" "+selectedType.size,
-      price:selectedType.price,
-      quantity:this.state.quantity,
-      options:options_str.substring(1),
-      product_type:type
+      index: 0,
+      product_id: this.state.product_info.id,
+      name: this.state.product_info.name,
+      img: this.state.product_info.img,
+      description: this.state.product_info.description,
+      type: this.state.selectedtypeId,
+      type_name:
+        (selectedType.sizes != undefined ? selectedType.sizes : "") +
+        " " +
+        selectedType.size,
+      price: selectedType.price,
+      quantity: this.state.quantity,
+      options: options_str.substring(1),
+      product_type: type
     };
-    let attributes=[];
+    let attributes = [];
 
-    let temp=this.state.extras;
+    let temp = this.state.extras;
 
-    for(i=0;i<temp.length;i++)
-    {
-      if(temp[i].count!=0)
-        attributes.push(temp[i]);
+    for (i = 0; i < temp.length; i++) {
+      if (temp[i].count != 0) attributes.push(temp[i]);
     }
 
-    cartitem={
+    cartitem = {
       ...cartitem,
-      attributes:attributes,
+      attributes: attributes
     };
 
     global.mycart.push(cartitem);
-    
-    NavigationService.navigate('Cart');
-  }
 
-  onCountChangeAttribute = (num, id)=>{
-    let temp=this.state.extras;
+    NavigationService.navigate("Cart");
+  };
 
-    for(i=0;i<temp.length;i++)
-    {
-      if(temp[i].extra_attributes_id==id)
-      {
-        temp[i].count=num;
+  onCountChangeAttribute = (num, id) => {
+    let temp = this.state.extras;
+
+    for (i = 0; i < temp.length; i++) {
+      if (temp[i].extra_attributes_id == id) {
+        temp[i].count = num;
         break;
       }
     }
-    this.setState({extras:temp});
-  }
-  convertText = (str) =>
-  {
-    if(str==null || str ==undefined)
-      return "";
-    str=str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g," ").replace(/<(.|\n)*?>/g, '').replace("\\","\"");
-      return str;
-  }
+    this.setState({ extras: temp });
+  };
+  convertText = str => {
+    if (str == null || str == undefined) return "";
+    str = str
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&nbsp;/g, " ")
+      .replace(/<(.|\n)*?>/g, "")
+      .replace("\\", '"');
+    return str;
+  };
 
   render() {
-    
-    let type=this.props.navigation.getParam("type",-1);
+    let type = this.props.navigation.getParam("type", -1);
     return (
-      
-    <View style={{flex:1,}}>
-      <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', paddingTop:0, resizeMode:'repeat'}}>
-        <StatusBar hidden />
-        <Spinner color={'#000'}
-          visible={this.state.loading} 
-          textContent={'Loading...'}
-          textStyle={{color:'#000'}}
-        />        
-        <SafeAreaView style={{width:'100%', flex:1,  alignItems:'center',}}>
-        <TouchableOpacity style={{width:'100%', height:RFPercentage(10),alignItems:'center',}} activeOpacity={0.8} onPress={()=>{
-          this.props.navigation.goBack();
-        }}>
-            <Image source={require('../assets/images/menu/menu_header.png')} style={{height:'80%', width:'70%',}} resizeMode={"contain"}></Image>
-          </TouchableOpacity>
-          <View style={{flex:1,width:'100%'}}>
-          <Animated.ScrollView
-            scrollEventThrottle={5}
-            showsVerticalScrollIndicator={false}
-            onScroll={Animated.event([{nativeEvent: {contentOffset: {y: this.nScroll}}}], {useNativeDriver: true})}
-            style={{zIndex: 0, width:'100%',}}>
-            <Animated.View style={{
-              transform: [{translateY: Animated.multiply(this.nScroll, 0.65)}, {scale: this.imgScale}],
-              backgroundColor: 'rgba(0,0,0,0)',width: "100%", 
-            }}>
-              <Animated.View
-                style={{ width: "100%", opacity: this.imgOpacity,backgroundColor:'rgba(0,0,0,0)', alignItems:'center' }}>
-                  <View style={{width:'100%', height:RFPercentage(35),backgroundColor:'rgba(0,0,0,0)'}}>
-                <Image source={{uri:this.state.product_info.img}} style={{width:'100%', height:'100%', alignItems:'center', paddingTop:10,}} resizeMode={"cover"}>
-                  </Image>
-                </View>
-                {!this.state.loading&&
-                  <View style={{marginTop:5, width:'95%', backgroundColor:'rgba(255,255,255,0.7)', borderRadius:10, flexDirection:'column', borderWidth:1, borderColor:'#000', paddingVertical:8, paddingHorizontal:20,}}>
-                    <Text style={[{color:'#000', alignSelf:'center'},{fontSize:RFPercentage(3)}]}>{this.state.product_info.name}</Text>
-                    <Text style={[{color:'#000', alignSelf:'flex-start'},{fontSize:RFPercentage(2.8)}]}>{this.convertText(this.state.product_info.description)}</Text>
-                    
-                    {this.state.options_checklist.length!=0&&<Text style={[{color:'#000', alignSelf:'flex-start'},{fontSize:RFPercentage(2.3)}]}>Included Toppings (Uncheck Undesired)</Text>
-                      }
-                    <View style={{width:'100%', flexDirection:'row', flexWrap:'wrap'}}>                      
-                    {
-                      this.state.options_checklist.map((item,key)=>{
-                        return (
-                          <CheckBox
-                              style={{width:'50%'}}
-                              onClick={()=>{
-                                options_checklist = this.state.options_checklist;
-                                options_checklist[key] = !options_checklist[key];
-                                this.setState({
-                                  options_checklist:options_checklist
-                                })
-                              }}
-                              checkedCheckBoxColor = {"#0a0"}
-                              uncheckedCheckBoxColor = {"#a00"}
-                              rightTextStyle = {this.state.options_checklist[key]?{color:'#0a0'}:{color:'#a00'}}
-                              isChecked={this.state.options_checklist[key]}
-                              rightText={this.state.options[key]}
-                          />
-                        );
-                      })
-                    }
-                    </View>
-
-                    <Select
-                        onSelect = {this.onSelect.bind(this)}
-                        defaultText={this.state.selecttypeText}
-                        style = {{borderWidth : 1,borderColor:'#000', width:'100%', paddingVertical:3,}}
-                        transparent={true}
-                        backdropStyle={{backgroundColor:'rgba(0,0,0,0.7)'}}
-                        textStyle = {{fontSize:RFPercentage(2.5),}}
-                        optionListStyle = {{backgroundColor : "#F5FCFF", width:'80%'}}
-                      >
-                        {
-                        this.state.product_info.Prices.map((item, key) => {
-                          return(
-                            <Option key={key} value = {item.attributes_id}>{this.convertText(item.sizes)} {this.convertText(item.size)}  ${item.price}</Option>
-                          )
-                          })
-                        }
-                    </Select>
-                  </View>
-                    }
-              </Animated.View>              
-            </Animated.View>
-            {!this.state.loading&&this.state.product_info.extras_category!=undefined&&
-            <ImageBackground source={require('../assets/images/sign/bg.png')} style={{width:'100%', height:'100%', paddingTop:0, resizeMode:'repeat'}}>
-            <Text style={[{color:'#000', alignSelf:'center', marginTop:RFPercentage(2)},{fontSize:RFPercentage(2.3)}]}>Additional Available Toppings</Text>
-            <Tabs tabContainerStyle={{height:RFPercentage(5),backgroundColor:'rgba(0,0,0,0)'}}
-              prerenderingSiblingsNumber={3}
-              onChangeTab={({i}) => {
-                this.setState({activeTab: i})
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={require("../assets/images/sign/bg.png")}
+          style={{
+            width: "100%",
+            height: "100%",
+            paddingTop: 0,
+            resizeMode: "repeat"
+          }}
+        >
+          <StatusBar hidden />
+          <Spinner
+            color={"#000"}
+            visible={this.state.loading}
+            textContent={"Loading..."}
+            textStyle={{ color: "#000" }}
+          />
+          <SafeAreaView
+            style={{ width: "100%", flex: 1, alignItems: "center" }}
+          >
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                height: RFPercentage(10),
+                alignItems: "center"
               }}
-              renderTabBar={(props) => 
-              <Animated.View style={{transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "rgba(0,0,0,0)"}}>
-                <ScrollableTab {...props} style={{backgroundColor:'rgba(0,0,0,0)',
-                  height:RFPercentage(5),}}
-                  renderTab={(name, page, active, onPress, onLayout) => (
-                    <TouchableOpacity key={page}
-                                      onPress={() => onPress(page)}
-                                      onLayout={onLayout}
-                                      activeOpacity={0.4}>
-                      <Animated.View
+              activeOpacity={0.8}
+              onPress={() => {
+                this.props.navigation.goBack();
+              }}
+            >
+              <Image
+                source={require("../assets/images/menu/menu_header.png")}
+                style={{ height: "80%", width: "70%" }}
+                resizeMode={"contain"}
+              ></Image>
+            </TouchableOpacity>
+            <View style={{ flex: 1, width: "100%" }}>
+              <Animated.ScrollView
+                scrollEventThrottle={5}
+                showsVerticalScrollIndicator={false}
+                onScroll={Animated.event(
+                  [{ nativeEvent: { contentOffset: { y: this.nScroll } } }],
+                  { useNativeDriver: true }
+                )}
+                style={{ zIndex: 0, width: "100%" }}
+              >
+                <Animated.View
+                  style={{
+                    transform: [
+                      { translateY: Animated.multiply(this.nScroll, 0.65) },
+                      { scale: this.imgScale }
+                    ],
+                    backgroundColor: "rgba(0,0,0,0)",
+                    width: "100%"
+                  }}
+                >
+                  <Animated.View
+                    style={{
+                      width: "100%",
+                      opacity: this.imgOpacity,
+                      backgroundColor: "rgba(0,0,0,0)",
+                      alignItems: "center"
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "100%",
+                        height: RFPercentage(35),
+                        backgroundColor: "rgba(0,0,0,0)"
+                      }}
+                    >
+                      <Image
+                        source={{ uri: this.state.product_info.img }}
                         style={{
-                          flex: 1,
-                          alignItems:'center',
-                          justifyContent:'center',
-                          backgroundColor: this.tabBg
-                        }}>
-                        <TabHeading scrollable
-                                    style={styles.tabbarstyle}
-                                    active={active}>
-                          <Animated.Text style={[styles.tabbarText,active?{color:'#8a0400'}:{color:'#000'}]}>
-                            {name}
-                          </Animated.Text>
-                        </TabHeading>
-                      </Animated.View>
-                    </TouchableOpacity>
-                  )}
-                  underlineStyle={{backgroundColor:'#8a0400', height:4}}/>
-              </Animated.View>
-              }>
-              {
-                this.state.product_info.extras_category.map((item, key) => {
-                  return(
-                    <Tab key={key.toString()} tabStyle={{backgroundColor:'rgba(0,0,0,0)'}}
-                    activeTabStyle={{backgroundColor:'rgba(0,0,0,0)', }}
-                      heading={item.name}
-                      // {
-                      //   <TabHeading style={styles.tabbarstyle}>
-                      //     <Text style={[styles.tabbarText,this.state.activeTab==key?{color:'#8a0400'}:{color:'#000'}]}></Text>
-                      //   </TabHeading>
-                      // }
+                          width: "100%",
+                          height: "100%",
+                          alignItems: "center",
+                          paddingTop: 10
+                        }}
+                        resizeMode={"cover"}
+                      ></Image>
+                    </View>
+                    {!this.state.loading && (
+                      <View
+                        style={{
+                          marginTop: 5,
+                          width: "95%",
+                          backgroundColor: "rgba(255,255,255,0.7)",
+                          borderRadius: 10,
+                          flexDirection: "column",
+                          borderWidth: 1,
+                          borderColor: "#000",
+                          paddingVertical: 8,
+                          paddingHorizontal: 20
+                        }}
                       >
-                        
-                      <ImageBackground source={require('../assets/images/sign/bg.png')} style={{flex:1, paddingTop:0, resizeMode:'repeat'}}>
-                        <FlatList style={{width:'100%',backgroundColor:'rgba(0,0,0,0.0)',}}
-                        data={this.getAttributesByid(item.attribute_categories_id)}
-                        renderItem={({ item }) => (
-                            <ProductRecord data={item} onCountChange={(num)=>this.onCountChangeAttribute(num, item.extra_attributes_id)} />
+                        <Text
+                          style={[
+                            { color: "#000", alignSelf: "center" },
+                            { fontSize: RFPercentage(3) }
+                          ]}
+                        >
+                          {this.state.product_info.name}
+                        </Text>
+                        <Text
+                          style={[
+                            { color: "#000", alignSelf: "flex-start" },
+                            { fontSize: RFPercentage(2.8) }
+                          ]}
+                        >
+                          {this.convertText(
+                            this.state.product_info.description
+                          )}
+                        </Text>
+
+                        {this.state.options_checklist.length != 0 && (
+                          <Text
+                            style={[
+                              { color: "#000", alignSelf: "flex-start" },
+                              { fontSize: RFPercentage(2.3) }
+                            ]}
+                          >
+                            Included Toppings (Uncheck Undesired)
+                          </Text>
                         )}
-                        numColumns={1}
-                        keyExtractor={(item, index) => index.toString()}
-                      /> 
-                      </ImageBackground>
-                    </Tab>
-                  )
-                })
-              }
-            </Tabs>
-            </ImageBackground>
-            }
-          </Animated.ScrollView>
-          
-        </View>
-        </SafeAreaView>
-        <SafeAreaView style={{width:'100%', flexDirection:'column', backgroundColor:'rgba(0,0,0,0)'}}>
-          <View style={{width:'100%', height:RFPercentage(8), backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{fontSize:RFPercentage(2.2), marginLeft:20}}>Quantity</Text>
-          <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
-            <View style={{paddingHorizontal:20,}}>
-            <InputSpinner max={100} types={true}
-              min={1}  value={1}
-              step={1} width={RFPercentage(18)} height={RFPercentage(5)} colorLeft={'#4d4d4d'} colorRight={'#008c62'}
-              color={"white"} background={'white'}
-              textColor={"#000"} fontSize={RFPercentage(2.2)} inputStyle={{padding:0}}
-              showBorder={true} rounded={false} onChange={(num)=>this.setState({quantity:num})}
-              buttonTextColor={"#fff"} buttonFontSize={RFPercentage(2.2)}/>
+                        <View
+                          style={{
+                            width: "100%",
+                            flexDirection: "row",
+                            flexWrap: "wrap"
+                          }}
+                        >
+                          {this.state.options_checklist.map((item, key) => {
+                            return (
+                              <CheckBox
+                                style={{ width: "50%" }}
+                                onClick={() => {
+                                  options_checklist = this.state
+                                    .options_checklist;
+                                  options_checklist[key] = !options_checklist[
+                                    key
+                                  ];
+                                  this.setState({
+                                    options_checklist: options_checklist
+                                  });
+                                }}
+                                checkedCheckBoxColor={"#0a0"}
+                                uncheckedCheckBoxColor={"#a00"}
+                                rightTextStyle={
+                                  this.state.options_checklist[key]
+                                    ? { color: "#0a0" }
+                                    : { color: "#a00" }
+                                }
+                                isChecked={this.state.options_checklist[key]}
+                                rightText={this.state.options[key]}
+                              />
+                            );
+                          })}
+                        </View>
+
+                        <Select
+                          onSelect={this.onSelect.bind(this)}
+                          defaultText={this.state.selecttypeText}
+                          style={{
+                            borderWidth: 1,
+                            borderColor: "#000",
+                            width: "100%",
+                            paddingVertical: 3
+                          }}
+                          transparent={true}
+                          backdropStyle={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+                          textStyle={{ fontSize: RFPercentage(2.5) }}
+                          optionListStyle={{
+                            backgroundColor: "#F5FCFF",
+                            width: "80%"
+                          }}
+                        >
+                          {this.state.product_info.Prices.map((item, key) => {
+                            return (
+                              <Option key={key} value={item.attributes_id}>
+                                {this.convertText(item.sizes)}{" "}
+                                {this.convertText(item.size)} ${item.price}
+                              </Option>
+                            );
+                          })}
+                        </Select>
+                      </View>
+                    )}
+                  </Animated.View>
+                </Animated.View>
+                {!this.state.loading &&
+                  this.state.product_info.extras_category != undefined && (
+                    <ImageBackground
+                      source={require("../assets/images/sign/bg.png")}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        paddingTop: 0,
+                        resizeMode: "repeat"
+                      }}
+                    >
+                      <Text
+                        style={[
+                          {
+                            color: "#000",
+                            alignSelf: "center",
+                            marginTop: RFPercentage(2)
+                          },
+                          { fontSize: RFPercentage(2.3) }
+                        ]}
+                      >
+                        Additional Available Toppings
+                      </Text>
+                      <Tabs
+                        tabContainerStyle={{
+                          height: RFPercentage(5),
+                          backgroundColor: "rgba(0,0,0,0)"
+                        }}
+                        prerenderingSiblingsNumber={3}
+                        onChangeTab={({ i }) => {
+                          this.setState({ activeTab: i });
+                        }}
+                        renderTabBar={props => (
+                          <Animated.View
+                            style={{
+                              transform: [{ translateY: this.tabY }],
+                              zIndex: 1,
+                              width: "100%",
+                              backgroundColor: "rgba(0,0,0,0)"
+                            }}
+                          >
+                            <ScrollableTab
+                              {...props}
+                              style={{
+                                backgroundColor: "rgba(0,0,0,0)",
+                                height: RFPercentage(5)
+                              }}
+                              renderTab={(
+                                name,
+                                page,
+                                active,
+                                onPress,
+                                onLayout
+                              ) => (
+                                <TouchableOpacity
+                                  key={page}
+                                  onPress={() => onPress(page)}
+                                  onLayout={onLayout}
+                                  activeOpacity={0.4}
+                                >
+                                  <Animated.View
+                                    style={{
+                                      flex: 1,
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      backgroundColor: this.tabBg
+                                    }}
+                                  >
+                                    <TabHeading
+                                      scrollable
+                                      style={styles.tabbarstyle}
+                                      active={active}
+                                    >
+                                      <Animated.Text
+                                        style={[
+                                          styles.tabbarText,
+                                          active
+                                            ? { color: "#8a0400" }
+                                            : { color: "#000" }
+                                        ]}
+                                      >
+                                        {name}
+                                      </Animated.Text>
+                                    </TabHeading>
+                                  </Animated.View>
+                                </TouchableOpacity>
+                              )}
+                              underlineStyle={{
+                                backgroundColor: "#8a0400",
+                                height: 4
+                              }}
+                            />
+                          </Animated.View>
+                        )}
+                      >
+                        {this.state.product_info.extras_category.map(
+                          (item, key) => {
+                            return (
+                              <Tab
+                                key={key.toString()}
+                                tabStyle={{ backgroundColor: "rgba(0,0,0,0)" }}
+                                activeTabStyle={{
+                                  backgroundColor: "rgba(0,0,0,0)"
+                                }}
+                                heading={item.name}
+                                // {
+                                //   <TabHeading style={styles.tabbarstyle}>
+                                //     <Text style={[styles.tabbarText,this.state.activeTab==key?{color:'#8a0400'}:{color:'#000'}]}></Text>
+                                //   </TabHeading>
+                                // }
+                              >
+                                <ImageBackground
+                                  source={require("../assets/images/sign/bg.png")}
+                                  style={{
+                                    flex: 1,
+                                    paddingTop: 0,
+                                    resizeMode: "repeat"
+                                  }}
+                                >
+                                  <FlatList
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "rgba(0,0,0,0.0)"
+                                    }}
+                                    data={this.getAttributesByid(
+                                      item.attribute_categories_id
+                                    )}
+                                    renderItem={({ item }) => (
+                                      <ProductRecord
+                                        data={item}
+                                        onCountChange={num =>
+                                          this.onCountChangeAttribute(
+                                            num,
+                                            item.extra_attributes_id
+                                          )
+                                        }
+                                      />
+                                    )}
+                                    numColumns={1}
+                                    keyExtractor={(item, index) =>
+                                      index.toString()
+                                    }
+                                  />
+                                </ImageBackground>
+                              </Tab>
+                            );
+                          }
+                        )}
+                      </Tabs>
+                    </ImageBackground>
+                  )}
+              </Animated.ScrollView>
+            </View>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              width: "100%",
+              flexDirection: "column",
+              backgroundColor: "rgba(0,0,0,0)"
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: RFPercentage(8),
+                backgroundColor: "rgba(0,0,0,0)"
+              }}
+            >
+              <Text style={{ fontSize: RFPercentage(2.2), marginLeft: 20 }}>
+                Quantity
+              </Text>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "center"
+                }}
+              >
+                <View style={{ paddingHorizontal: 20 }}>
+                  <InputSpinner
+                    max={100}
+                    types={true}
+                    min={1}
+                    value={1}
+                    step={1}
+                    width={RFPercentage(18)}
+                    height={RFPercentage(5)}
+                    colorLeft={"#4d4d4d"}
+                    colorRight={"#008c62"}
+                    color={"white"}
+                    background={"white"}
+                    textColor={"#000"}
+                    fontSize={RFPercentage(2.2)}
+                    inputStyle={{ padding: 0 }}
+                    showBorder={true}
+                    rounded={false}
+                    onChange={num => this.setState({ quantity: num })}
+                    buttonTextColor={"#fff"}
+                    buttonFontSize={RFPercentage(2.2)}
+                  />
+                </View>
+                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#8a0400",
+                      height: RFPercentage(5),
+                      borderRadius: 7,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row"
+                    }}
+                    onPress={() => this.addCart()}
+                  >
+                    <Text
+                      style={{ fontSize: RFPercentage(2.5), color: "#fff" }}
+                    >
+                      Add to Cart
+                    </Text>
+                    <Icon
+                      name="ios-return-right"
+                      type="Ionicons"
+                      style={{
+                        marginLeft: 20,
+                        fontSize: RFPercentage(2.5),
+                        color: "#fff"
+                      }}
+                    ></Icon>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={{flex:1, paddingHorizontal:20,}}>
-                <TouchableOpacity style={{backgroundColor:'#8a0400', height:RFPercentage(5), borderRadius:7,alignItems:'center', justifyContent:'center', flexDirection:'row'}} onPress={()=>this.addCart()}>
-                  <Text  style={{fontSize:RFPercentage(2.5), color:'#fff'}}>Add to Cart
-                  </Text><Icon name="ios-return-right" type="Ionicons" style={{marginLeft:20, fontSize:RFPercentage(2.5),color:'#fff'}}></Icon>
-                </TouchableOpacity>
-              </View>
-          </View>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
-    </View>
-    )
+            </View>
+          </SafeAreaView>
+        </ImageBackground>
+      </View>
+    );
   }
 }

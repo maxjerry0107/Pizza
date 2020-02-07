@@ -1,7 +1,7 @@
-import * as axios from 'axios';
+import * as axios from "axios";
 
 var instance = axios.create();
-instance.defaults.baseURL = 'http://smokinfranks.com/api/';
-instance.defaults.timeout = 1000*30;
+instance.defaults.baseURL = "http://smokinfranks.com/api/";
+instance.defaults.timeout = 1000 * 30;
 
 export { instance as default };

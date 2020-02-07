@@ -28,6 +28,7 @@ import OrderDetail_ORDERIN from './app/components/OrderDetail_ORDERIN'
 import OrderDetail_SMOKE from './app/components/OrderDetail_SMOKE'
 import OrderinSign from './app/components/OrderinSign'
 import MyFavourites from './app/components/MyFavourites'
+import CreditCard from './app/components/CreditCard'
 
 console.disableYellowBox = true;
 const ActivityProject = createStackNavigator(
@@ -47,6 +48,7 @@ const ActivityProject = createStackNavigator(
     MyFavourites:{screen:MyFavourites, navigationOptions: {header: null,}, },
     OrderDetail_ORDERIN:{screen:OrderDetail_ORDERIN, navigationOptions: {header: null,}, },
     OrderDetail_SMOKE:{screen:OrderDetail_SMOKE, navigationOptions: {header: null,}, },
+    CreditCard:{screen:CreditCard, navigationOptions: {header: null,}, },
   },
   {
     initialRouteName: "Intro",

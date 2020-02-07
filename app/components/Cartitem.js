@@ -46,7 +46,7 @@ render () {
                     </Text> 
                     }
                     <InputSpinner max={100} style={{borderWidth:1, borderColor:'#000', alignSelf:"flex-end", marginRight:RFPercentage(2)}}
-                        min={0} types={true}
+                        min={1} types={true}
                         step={1} width={RFPercentage(10)} height={RFPercentage(3)}
                         color={"#000"}  onChange={(num)=>this.cartitem_change_quantity(num)}
                         textColor={"#000"} fontSize={RFPercentage(2.6)} inputStyle={{padding:0}}
